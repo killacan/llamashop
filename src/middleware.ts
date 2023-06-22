@@ -1,10 +1,7 @@
 import { authMiddleware } from "@clerk/nextjs";
 
 export default authMiddleware({
-    afterAuth(auth, req, evt) {
-        // Users who are not authenticated will stay on the page they are on. 
-            return
-    }
+    publicRoutes: ["/"],
 });
 
 export const config = {
