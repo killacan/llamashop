@@ -2,11 +2,23 @@ import Head from "next/head";
 import { api } from "~/utils/api";
 import { useUser } from "@clerk/clerk-react";
 import { useEffect } from "react";
+import ProductListing from "~/components/productListing";
+import { Product } from "~/components/productInterface";
 
 export default function Home() {
 
-  const getShops = api.shopRouter.getShops.useQuery();
-  const getBlueprints = api.shopRouter.getProducts.useQuery();
+  const products = api.shopRouter.getProducts.useQuery();
+
+  const productsBuilder = () => {
+    if (!products.data) {
+      console.log("no products.data")
+      return null; // Return null or loading spinner while data is fetching
+    }
+    let productList: Array<Product> = products.data.data;
+    return productList.map((product: Product, index:number) => (
+      <ProductListing product={product} key={index} />
+    ));
+  };
 
   return (
     <>
@@ -32,7 +44,9 @@ export default function Home() {
 
           <div className="">
             <h2 className="text-2xl">products</h2>
-
+            <div className="grid grid-cols-3 gap-5">
+              {productsBuilder()}
+            </div>
           </div>
 
         </div>

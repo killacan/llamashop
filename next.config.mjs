@@ -18,6 +18,14 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
+  images:{
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images-api.printify.com'
+      },
+    ],
+  },
 };
 
 export default config;

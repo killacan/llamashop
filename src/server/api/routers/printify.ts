@@ -52,9 +52,9 @@ export const shopRouter = createTRPCRouter({
   ),
   getProducts: publicProcedure
     .query(async () => {
-        const blueprints = await makePrintifyRequest("/shops/5510911/products.json");
-        console.log(blueprints, "blueprints");
-        return blueprints;
+        const products = await makePrintifyRequest("/shops/10296800/products.json");
+        console.log(products, "products");
+        return products;
     }
   ),
 });
