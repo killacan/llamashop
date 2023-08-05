@@ -4,6 +4,7 @@ import { createTRPCContext, createTRPCRouter, publicProcedure } from "~/server/a
 import fetch from "node-fetch";
 import dotenv from "dotenv";
 import { type Product } from "~/components/productInterface";
+import { z } from "zod";
 
 dotenv.config();
 
@@ -73,6 +74,15 @@ export const shopRouter = createTRPCRouter({
         const products = await makePrintifyRequest("/shops/10296800/products.json");
         // console.log(products, "products");
         return products;
+    }
+  ),
+  getProduct: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async (opts) => {
+        const { id } = opts.input;
+        const product = await makePrintifyRequest(`/shops/10296800/products/${id}.json`);
+        // console.log(product, "product");
+        return product;
     }
   ),
 });

@@ -3,6 +3,7 @@ import { api } from "~/utils/api";
 import ProductListing from "~/components/productListing";
 import { type Product } from "~/components/productInterface";
 import { type UseQueryResult } from "@tanstack/react-query";
+import { useState } from "react";
 
 export default function Home() {
 
@@ -10,14 +11,21 @@ export default function Home() {
     data: Array<Product>
   }
 
-  const products: UseQueryResult<Products | undefined> = api.shopRouter.getProducts.useQuery();
+  const [productsData, setProductsData] = useState<Products | undefined>(undefined);
+
+  const products = api.shopRouter.getProducts.useQuery(undefined, {
+    enabled: !productsData,
+    onSuccess: (data) => {
+      setProductsData(data);
+    }
+  });
 
   const productsBuilder = () => {
-    if (!products.data) {
+    if (!productsData) {
       // console.log("no products.data")
       return null; // Return null or loading spinner while data is fetching
     }
-    const productList: Array<Product> = products.data.data;
+    const productList: Array<Product> = productsData.data;
     return productList.map((product: Product, index:number) => (
       <ProductListing product={product} key={index} />
     ));
