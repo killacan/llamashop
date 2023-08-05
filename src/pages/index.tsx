@@ -1,20 +1,23 @@
 import Head from "next/head";
 import { api } from "~/utils/api";
-import { useUser } from "@clerk/clerk-react";
-import { useEffect } from "react";
 import ProductListing from "~/components/productListing";
-import { Product } from "~/components/productInterface";
+import { type Product } from "~/components/productInterface";
+import { type UseQueryResult } from "@tanstack/react-query";
 
 export default function Home() {
 
-  const products = api.shopRouter.getProducts.useQuery();
+  interface Products {
+    data: Array<Product>
+  }
+
+  const products: UseQueryResult<Products | undefined> = api.shopRouter.getProducts.useQuery();
 
   const productsBuilder = () => {
     if (!products.data) {
-      console.log("no products.data")
+      // console.log("no products.data")
       return null; // Return null or loading spinner while data is fetching
     }
-    let productList: Array<Product> = products.data.data;
+    const productList: Array<Product> = products.data.data;
     return productList.map((product: Product, index:number) => (
       <ProductListing product={product} key={index} />
     ));

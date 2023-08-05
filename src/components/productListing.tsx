@@ -1,5 +1,4 @@
-import { Product } from "./productInterface"
-import Link from "next/link"
+import { type Product } from "./productInterface"
 import Image from "next/image"
 
 interface ProductListingProps {
@@ -9,7 +8,7 @@ interface ProductListingProps {
 
 export default function ProductListing({product}: ProductListingProps ) {
 
-    console.log(product)
+    // console.log(product)
 
     return (
         <div className="border border-white rounded-lg overflow-hidden">
