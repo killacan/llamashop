@@ -4,12 +4,26 @@ import ProductListing from "~/components/productListing";
 import { type Product } from "~/components/productInterface";
 import { type UseQueryResult } from "@tanstack/react-query";
 import { useState } from "react";
+import { create } from 'zustand';
 
 export default function Home() {
 
   interface Products {
     data: Array<Product>
   }
+
+  interface llamashopState {
+    products: UseQueryResult<Products, unknown>
+  }
+
+  const useStore = create<llamashopState>((set, get) => ({
+    products: api.shopRouter.getProducts.useQuery(undefined, {
+      enabled: false,
+      onSuccess: (data) => {
+        set({ products: data })
+      }
+    }),
+  }))
 
   const [productsData, setProductsData] = useState<Products | undefined>(undefined);
 
