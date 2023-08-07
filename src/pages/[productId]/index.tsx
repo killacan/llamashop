@@ -2,7 +2,6 @@ import { api } from "~/utils/api";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { useState } from "react";
-// import { QueryObserverSuccessResult } from "react-query"; // Make sure to import the correct type
 
 export default function ProductPage() {
   const [showImage, setShowImage] = useState<number>(0);
@@ -19,7 +18,6 @@ export default function ProductPage() {
     const handleShowImage = (e: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
         const clickedImg = e.target as HTMLImageElement;
         const index = clickedImg.dataset.index;
-        console.log(index)
 
         if (index) {
             setShowImage(parseInt(index));
