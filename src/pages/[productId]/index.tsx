@@ -12,7 +12,7 @@ export default function ProductPage() {
     const productId = typeof router.query.productId === 'string' ? router.query.productId : undefined;
 
     const productQuery = api.shopRouter.getProduct.useQuery({ id: productId });
-    console.log(productQuery.data?.title, "this is the product query")
+    // console.log(productQuery.data?.title, "this is the product query")
 
     return (
         <>

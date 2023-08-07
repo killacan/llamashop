@@ -9,7 +9,7 @@ interface ProductListingProps {
 
 export default function ProductListing({product}: ProductListingProps ) {
 
-    console.log(product)
+    // console.log(product)
 
     return (
         <Link href={`/${product.id}`}>
