@@ -46,12 +46,42 @@ async function makePrintifyRequest(path: string, method = "GET", body?: unknown)
   interface DataResponse {
     data: Product[]
     error?: string
+
   }
 
   const response = await fetch(url, options);
   const data: DataResponse = (await response.json()) as DataResponse;
 
   console.log(data, "data")
+
+  if (!response.ok && data.error) {
+    throw new Error(`Request to Printify API failed: ${data.error}`);
+  }
+
+  return data;
+}
+
+async function makePrintifySingleItemRequest(path: string, method = "GET", body?: unknown) {
+  const apiUrl = "https://api.printify.com/v1";
+  const url = `${apiUrl}/${path}`;
+  const headers = {
+    "Content-Type": "application/json;charset=utf-8",
+    Authorization: `Bearer ${apiKey}`,
+  };
+
+  const options: Options = {
+    method,
+    headers,
+  };
+
+  if (body) {
+    options.body = JSON.stringify(body);
+  }
+  
+  const response = await fetch(url, options);
+  const data: Product = (await response.json()) as Product;
+
+  // console.log(data, "data from single item request")
 
   if (!response.ok && data.error) {
     throw new Error(`Request to Printify API failed: ${data.error}`);
@@ -77,11 +107,15 @@ export const shopRouter = createTRPCRouter({
     }
   ),
   getProduct: publicProcedure
-    .input(z.object({ id: z.string() }))
+    .input(z.object({ id: z.string().optional() }))
     .query(async (opts) => {
         const { id } = opts.input;
-        const product = await makePrintifyRequest(`/shops/10296800/products/${id}.json`);
-        // console.log(product, "product");
+        // make sure program does not break if no id is passed
+        if (!id) {
+          return null;
+        }
+        const product = await makePrintifySingleItemRequest(`/shops/10296800/products/${id}.json`);
+        // console.log(product, "This is the single product");
         return product;
     }
   ),

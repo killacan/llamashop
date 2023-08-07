@@ -12,4 +12,5 @@ export interface Product {
     title:string,
     variants:Array<unknown>,
     visible:boolean, 
+    error?:string,
 }

@@ -2,14 +2,14 @@ import Head from "next/head";
 import { api } from "~/utils/api";
 import ProductListing from "~/components/productListing";
 import { type Product } from "~/components/productInterface";
-import { type UseQueryResult } from "@tanstack/react-query";
 import { useState } from "react";
+
+export interface Products {
+  data: Array<Product>
+}
 
 export default function Home() {
 
-  interface Products {
-    data: Array<Product>
-  }
 
   const [productsData, setProductsData] = useState<Products | undefined>(undefined);
 
