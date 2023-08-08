@@ -13,4 +13,5 @@ export interface Product {
     variants:Array<unknown>,
     visible:boolean, 
     error?:string,
+    qty?:number,
 }

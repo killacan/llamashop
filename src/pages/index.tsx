@@ -4,6 +4,7 @@ import ProductListing from "~/components/productListing";
 import { type Product } from "~/components/productInterface";
 import { useState } from "react";
 
+
 export interface Products {
   data: Array<Product>
 }
