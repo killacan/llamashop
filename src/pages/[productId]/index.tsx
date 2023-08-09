@@ -11,24 +11,24 @@ export default function ProductPage() {
 
   const productQuery = api.shopRouter.getProduct.useQuery({ id: productId });
 
+  console.log(productQuery.data)
+
   const currentImg = productQuery.data?.images[showImage] as { src:string, position:string };
   
-//   console.log(currentImg.src)
+  const handleShowImage = (e: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
+    const clickedImg = e.target as HTMLImageElement;
+    const index = clickedImg.dataset.index;
 
-    const handleShowImage = (e: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
-        const clickedImg = e.target as HTMLImageElement;
-        const index = clickedImg.dataset.index;
-
-        if (index) {
-            setShowImage(parseInt(index));
-        }
-
+    if (index) {
+        setShowImage(parseInt(index));
     }
+
+  }
 
   if ('data' in productQuery && productQuery.data) {
     return (
-      <>
-        <div className="flex flex-row">
+      <div className="">
+        <div className="flex flex-row justify-center p-10">
           {productQuery.data.images && productQuery.data.images[showImage]?.src && (
             <div className="flex flex-row">
               <div className="overflow-y-scroll h-64 pr-3">
@@ -45,14 +45,14 @@ export default function ProductPage() {
               />
             </div>
           )}
-          <h1 className="text-2xl">{productQuery.data.title}</h1>
+          <h1 className="text-2xl lg:m-12">{productQuery.data.title}</h1>
         </div>
         {productQuery.error && (
           <div>
             <h1>This Product does not exist</h1>
           </div>
         )}
-      </>
+      </div>
     );
   } else {
     // Return null or a loading state if productQuery is not yet ready

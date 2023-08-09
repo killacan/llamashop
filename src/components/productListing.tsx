@@ -9,8 +9,6 @@ interface ProductListingProps {
 
 export default function ProductListing({product}: ProductListingProps ) {
 
-    // console.log(product)
-
     return (
         <Link href={`/${product.id}`}>
             <div className="border border-white rounded-lg overflow-hidden">
