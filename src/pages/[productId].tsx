@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import { useState } from "react";
 import { useCartState } from "~/components/useCart";
+import { set } from "zod";
 
 export default function ProductPage() {
   const [showImage, setShowImage] = useState<number>(0);
@@ -20,6 +21,14 @@ export default function ProductPage() {
   
   const productOptions = productQuery.data?.options
 
+  if (productQuery.data && selectedOptions.length === 0) {
+    productQuery.data.variants.forEach((variant) => {
+      if (variant.is_default) {
+        setSelectedOptions(variant.options);
+      }
+    });
+  }
+
   const optionsBuilder = () => {
     if (productOptions) {
       return productOptions.map((option, rootIndex) => (
@@ -32,8 +41,8 @@ export default function ProductPage() {
                 <input
                   type="radio"
                   name={`option-${rootIndex}`}
-                  value={value.title}
-                  onChange={() => handleOptionChange(rootIndex, value.title)}
+                  value={value.id}
+                  onChange={() => handleOptionChange(rootIndex, value.id)}
                 />
                 {value.title}
               </label>
@@ -44,9 +53,17 @@ export default function ProductPage() {
     }
   };
   
-  const handleOptionChange = (rootIndex:number, selectedValue:string) => {
+  const handleOptionChange = (rootIndex:number, selectedValue:number) => {
     // Implement your logic to update the selected option for the specific index
     console.log(`Option ${rootIndex} selected: ${selectedValue}`);
+    setSelectedOptions((prev) => {
+      const newOptions = [...prev];
+      newOptions[rootIndex] = selectedValue;
+      console.log(newOptions, 'newOptions')
+      return newOptions;
+    }
+    );
+    console.log(selectedOptions, 'selectedOptions')
   };
 
   const handleShowImage = (e: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
@@ -59,7 +76,8 @@ export default function ProductPage() {
 
   }
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
     if (productQuery.data) {
       const cartItem = productQuery.data;
       
@@ -89,15 +107,15 @@ export default function ProductPage() {
               />
             </div>
           )}
-          <div className="flex flex-col">
+          <form className="flex flex-col">
             <h1 className="text-2xl lg:m-12">{productQuery.data.title}</h1>
             {productOptions && optionsBuilder()}
             <div className="text-lg lg:m-12 w-96" dangerouslySetInnerHTML={{__html: productQuery.data.description}}></div>
           
-            <button className="text-white w-3/4 h-10 mx-auto bg-violet-700 rounded-full hover:bg-violet-500" onClick={() => handleAddToCart ()}>
+            <button className="text-white w-3/4 h-10 mx-auto bg-violet-700 rounded-full hover:bg-violet-500" onClick={(e) => handleAddToCart (e)}>
               Add to Cart
             </button>
-          </div>
+          </form>
 
         </div>
         

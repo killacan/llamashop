@@ -17,7 +17,8 @@ export interface Product {
             cost:number,
             id:number,
             is_available:boolean,
-            options:Array<string>
+            is_default:boolean,
+            options:Array<number>
         }
     ],
     options: Array<{
