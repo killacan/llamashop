@@ -9,7 +9,7 @@ interface CartState {
   removeAllFromCart: () => void;
 }
 
-const useStore = create(persist<CartState>(
+export const useCartState = create<CartState>()(persist(
     (set, get) => ({
         cart: [],
         addToCart: (product: Product) => {

@@ -6,11 +6,31 @@ export interface Product {
     id:string,
     images:Array<{
         src: string,
-        position:string
+        position:string, 
+        is_default:boolean,
+        variant_ids:Array<number>,
     }>,
     tags:Array<string>,
     title:string,
-    variants:Array<unknown>,
+    variants:[
+        {
+            cost:number,
+            id:number,
+            is_available:boolean,
+            options:Array<string>
+        }
+    ],
+    options: Array<{
+        name:string,
+        type:string,
+        values: [
+            {
+                id:number, 
+                title:string,
+                colors?:Array<string>,
+            }
+        ]
+    }>,
     visible:boolean, 
     error?:string,
     qty?:number,
