@@ -23,23 +23,22 @@ export default function Home() {
 
   const hasHydrated = useHasHydrated();
   const { shopItems, setShopItems } = shopItemsState((state) => state);
-  const [productsData, setProductsData] = useState<Products | undefined>(undefined);
 
   const products = api.shopRouter.getProducts.useQuery(undefined, {
-    enabled: !productsData,
+    enabled: shopItems.length === 0,
     onSuccess: (data) => {
-      setProductsData(data);
+      setShopItems(data.data);
     }
   });
 
   const productsBuilder = () => {
-    if (!productsData) {
+    if (shopItems.length === 0) {
       // console.log("no products.data")
       // add a loading spinner here
 
       return <p>Loading ...</p>; // Return null or loading spinner while data is fetching
     }
-    const productList: Array<Product> = productsData.data;
+    const productList: Array<Product> = shopItems;
     return productList.map((product: Product, index:number) => (
       <ProductListing product={product} key={index} />
     ));
