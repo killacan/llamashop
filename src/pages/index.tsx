@@ -2,8 +2,18 @@ import Head from "next/head";
 import { api } from "~/utils/api";
 import ProductListing from "~/components/productListing";
 import { type Product } from "~/components/productInterface";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { shopItemsState } from "~/components/shopItems";
 
+const useHasHydrated = () => {
+    const [hasHydrated, setHasHydrated] = useState<boolean>(false);
+  
+    useEffect(() => {
+      setHasHydrated(true);
+    }, []);
+  
+    return hasHydrated;
+  };
 
 export interface Products {
   data: Array<Product>
@@ -11,7 +21,8 @@ export interface Products {
 
 export default function Home() {
 
-
+  const hasHydrated = useHasHydrated();
+  const { shopItems, setShopItems } = shopItemsState((state) => state);
   const [productsData, setProductsData] = useState<Products | undefined>(undefined);
 
   const products = api.shopRouter.getProducts.useQuery(undefined, {
@@ -24,7 +35,9 @@ export default function Home() {
   const productsBuilder = () => {
     if (!productsData) {
       // console.log("no products.data")
-      return null; // Return null or loading spinner while data is fetching
+      // add a loading spinner here
+
+      return <p>Loading ...</p>; // Return null or loading spinner while data is fetching
     }
     const productList: Array<Product> = productsData.data;
     return productList.map((product: Product, index:number) => (
@@ -57,7 +70,7 @@ export default function Home() {
           <div className="">
             <h2 className="text-2xl">products</h2>
             <div className="grid grid-cols-3 gap-5">
-              {productsBuilder()}
+              {hasHydrated && productsBuilder()}
             </div>
           </div>
 
