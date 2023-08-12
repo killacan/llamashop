@@ -13,7 +13,7 @@ const useHasHydrated = () => {
     }, []);
   
     return hasHydrated;
-  };
+};
 
 export interface Products {
   data: Array<Product>
