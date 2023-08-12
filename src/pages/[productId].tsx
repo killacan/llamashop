@@ -1,15 +1,28 @@
 import { api } from "~/utils/api";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useCartState } from "~/components/useCart";
+import { shopItemsState } from "~/components/shopItems";
+
+
+const useHasHydrated = () => {
+  const [hasHydrated, setHasHydrated] = useState<boolean>(false);
+
+  useEffect(() => {
+    setHasHydrated(true);
+  }, []);
+
+  return hasHydrated;
+};
 
 export default function ProductPage() {
   const [showImage, setShowImage] = useState<number>(0);
   const [selectedOptions, setSelectedOptions] = useState<Array<number>>([]);
+  const hasHydrated = useHasHydrated();
 
-  const cart = useCartState((state) => state.cart)
   const addToCart = useCartState((state) => state.addToCart)
+  const shopItems = shopItemsState((state) => state.shopItems)
 
   const router = useRouter();
   const productId = typeof router.query.productId === 'string' ? router.query.productId : undefined;
@@ -83,14 +96,13 @@ export default function ProductPage() {
       addToCart(cartItem);
     }
     console.log('add to cart', productQuery.data)
-    console.log('cart', cart)
   }
 
   if ('data' in productQuery && productQuery.data) {
     return (
       <div className="">
         <div className="flex flex-row justify-center p-10">
-          {productQuery.data.images && productQuery.data.images[showImage]?.src && (
+          {hasHydrated && productQuery.data.images && productQuery.data.images[showImage]?.src && (
             <div className="flex flex-row">
               <div className="overflow-y-scroll h-64 pr-3 sticky top-20">
                 {productQuery.data.images.map((image, index) => (
@@ -108,7 +120,7 @@ export default function ProductPage() {
           )}
           <form className="flex flex-col">
             <h1 className="text-2xl lg:m-12">{productQuery.data.title}</h1>
-            {productOptions && optionsBuilder()}
+            {hasHydrated && productOptions && optionsBuilder()}
             <div className="text-lg lg:m-12 w-96" dangerouslySetInnerHTML={{__html: productQuery.data.description}}></div>
           
             <button className="text-white w-3/4 h-10 mx-auto bg-violet-700 rounded-full hover:bg-violet-500" onClick={(e) => handleAddToCart (e)}>
