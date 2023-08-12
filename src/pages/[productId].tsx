@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import { useState } from "react";
 import { useCartState } from "~/components/useCart";
-import { set } from "zod";
 
 export default function ProductPage() {
   const [showImage, setShowImage] = useState<number>(0);
