@@ -1,10 +1,10 @@
+import React, { useState, useEffect } from 'react';
 import { api } from "~/utils/api";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import { useState, useEffect } from "react";
 import { useCartState } from "~/components/useCart";
 import { shopItemsState } from "~/components/shopItems";
-
+import { Product } from '~/components/productInterface';
 
 const useHasHydrated = () => {
   const [hasHydrated, setHasHydrated] = useState<boolean>(false);
@@ -21,20 +21,37 @@ export default function ProductPage() {
   const [selectedOptions, setSelectedOptions] = useState<Array<number>>([]);
   const hasHydrated = useHasHydrated();
 
-  const addToCart = useCartState((state) => state.addToCart)
-  const shopItems = shopItemsState((state) => state.shopItems)
+  const addToCart = useCartState((state) => state.addToCart);
+  const shopItems = shopItemsState((state) => state.shopItems);
 
   const router = useRouter();
-  const productId = typeof router.query.productId === 'string' ? router.query.productId : undefined;
+  let productId = typeof router.query.productId === 'string' ? router.query.productId : undefined;
+
+  let productQueryData: Product | null | undefined = null;
+
+  if (hasHydrated) {
+    const existingProduct = shopItems.find(product => product.id === productId);
+    if (existingProduct) {
+      productQueryData = existingProduct;
+      productId = undefined;
+    } 
+  } else {
+    productId = undefined;
+  }
 
   const productQuery = api.shopRouter.getProduct.useQuery({ id: productId });
 
-  const currentImg = productQuery.data?.images[showImage] as { src:string, position:string };
-  
-  const productOptions = productQuery.data?.options
+  if (!productQueryData) {
+    productQueryData = productQuery.data;
+  }
 
-  if (productQuery.data && selectedOptions.length === 0) {
-    productQuery.data.variants.forEach((variant) => {
+  const currentImg = productQueryData?.images[showImage] as { src: string, position: string };
+
+  const productOptions = productQueryData?.options;
+
+
+  if (productQueryData && selectedOptions.length === 0) {
+    productQueryData.variants.forEach((variant) => {
       if (variant.is_default) {
         setSelectedOptions(variant.options);
       }
@@ -90,22 +107,22 @@ export default function ProductPage() {
 
   const handleAddToCart = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
-    if (productQuery.data) {
-      const cartItem = productQuery.data;
+    if (productQueryData) {
+      const cartItem = productQueryData;
       
       addToCart(cartItem);
     }
-    console.log('add to cart', productQuery.data)
+    // console.log('add to cart', productQueryData)
   }
 
-  if ('data' in productQuery && productQuery.data) {
+  if (productQueryData) {
     return (
       <div className="">
         <div className="flex flex-row justify-center p-10">
-          {hasHydrated && productQuery.data.images && productQuery.data.images[showImage]?.src && (
+          {hasHydrated && productQueryData.images && productQueryData.images[showImage]?.src && (
             <div className="flex flex-row">
               <div className="overflow-y-scroll h-64 pr-3 sticky top-20">
-                {productQuery.data.images.map((image, index) => (
+                {productQueryData.images.map((image, index) => (
                   <Image onClick={(e) => handleShowImage (e)} src={image.src} width={50} height={50} alt="product image" key={index} data-index={index} />
                 ))}
               </div>
@@ -119,9 +136,9 @@ export default function ProductPage() {
             </div>
           )}
           <form className="flex flex-col">
-            <h1 className="text-2xl lg:m-12">{productQuery.data.title}</h1>
+            <h1 className="text-2xl lg:m-12">{productQueryData.title}</h1>
             {hasHydrated && productOptions && optionsBuilder()}
-            <div className="text-lg lg:m-12 w-96" dangerouslySetInnerHTML={{__html: productQuery.data.description}}></div>
+            <div className="text-lg lg:m-12 w-96" dangerouslySetInnerHTML={{__html: productQueryData.description}}></div>
           
             <button className="text-white w-3/4 h-10 mx-auto bg-violet-700 rounded-full hover:bg-violet-500" onClick={(e) => handleAddToCart (e)}>
               Add to Cart
@@ -132,7 +149,7 @@ export default function ProductPage() {
         
         
         
-        {productQuery.error && (
+        {productQueryData.error && (
           <div>
             <h1>This Product does not exist</h1>
           </div>

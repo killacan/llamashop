@@ -7,15 +7,11 @@ interface ShopState {
     setShopItems: (products: Array<Product>) => void;
 }
 
-export const shopItemsState = create<ShopState>()(persist(
+export const shopItemsState = create<ShopState>()(
     (set) => ({
         shopItems: [],
         setShopItems: (products: Array<Product>) => {
             set({ shopItems: products });
         },
     }),
-    {
-        name: 'shopItems-storage',
-        storage: createJSONStorage(() => sessionStorage),
-    }
-));
+);
