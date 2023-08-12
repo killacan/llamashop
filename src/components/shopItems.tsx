@@ -1,7 +1,6 @@
 import { create } from 'zustand'
 import { Product } from './productInterface';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { api } from '~/utils/api';
 
 interface ShopState {
   shopItems: Array<Product>,
@@ -9,7 +8,7 @@ interface ShopState {
 }
 
 export const shopItemsState = create<ShopState>()(persist(
-    (set, get) => ({
+    (set) => ({
         shopItems: [],
         setShopItems: (products: Array<Product>) => {
             set({ shopItems: products });
