@@ -2,14 +2,15 @@ import { create } from 'zustand'
 import { type Product } from './productInterface';
 import { persist } from 'zustand/middleware';
 
-interface cartItem {
+export interface cartItem {
     product: Product,
     variant: {
         cost:number,
         id:number,
         is_available:boolean,
         is_default:boolean,
-        options:Array<number>
+        options:Array<number>,
+        title: string,
     },
     qty: number,
 }
@@ -19,8 +20,8 @@ interface CartState {
     addToCart: (cartItem: cartItem) => void;
     removeFromCart: (cartItem: cartItem) => void;
     removeAllFromCart: () => void;
-    incrementQty: (cartItem: cartItem) => void;
-    decrementQty: (cartItem: cartItem) => void;
+    incrementQty: (cartItem: cartItem | undefined) => void;
+    decrementQty: (cartItem: cartItem | undefined) => void;
 }
 
 export const useCartState = create<CartState>()(persist(
@@ -35,7 +36,10 @@ export const useCartState = create<CartState>()(persist(
         removeAllFromCart: () => {
             set({ cart: [] });
         },
-        incrementQty: (cartItem: cartItem) => {
+        incrementQty: (cartItem: cartItem | undefined) => {
+            if (typeof cartItem === 'undefined') {
+                return
+            }
             set({
                 cart: get().cart.map((item) => {
                     if (item.variant === cartItem.variant) {
@@ -45,7 +49,10 @@ export const useCartState = create<CartState>()(persist(
                 }),
             });
         },
-        decrementQty: (cartItem: cartItem) => {
+        decrementQty: (cartItem: cartItem | undefined) => {
+            if (typeof cartItem === 'undefined') {
+                return
+            }
             set({
                 cart: get().cart.map((item) => {
                     if (item.variant === cartItem.variant) {

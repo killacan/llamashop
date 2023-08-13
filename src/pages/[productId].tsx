@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { api } from "~/utils/api";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import { useCartState } from "~/components/useCart";
+import { cartItem, useCartState } from "~/components/useCart";
 import { shopItemsState } from "~/components/shopItems";
 import { Product } from '~/components/productInterface';
 
@@ -21,7 +21,8 @@ export default function ProductPage() {
   const [selectedOptions, setSelectedOptions] = useState<Array<number>>([]);
   const hasHydrated = useHasHydrated();
 
-  const addToCart = useCartState((state) => state.addToCart);
+  const cart = useCartState((state) => (state.cart))
+  const cartFunctions = useCartState(state => state)
   const shopItems = shopItemsState((state) => state.shopItems);
 
   const router = useRouter();
@@ -120,13 +121,22 @@ export default function ProductPage() {
         return;
       }
       
-      const cartItem = {
+      const cartItem: cartItem = {
         product: cartItemProduct,
-        variant: cartItemVariant as { id: number, cost: number, is_available: boolean, is_default: boolean, options: Array<number>},
+        variant: cartItemVariant as { id: number, cost: number, is_available: boolean, is_default: boolean, options: Array<number>, title: string},
         qty: 1,
       }
 
-      addToCart(cartItem);
+      const cartIndex = cart.findIndex(item => item.product.id === cartItem.product.id && 
+        item.variant.id === cartItem.variant.id);
+
+      if (cartIndex === -1) {
+        cartFunctions.addToCart(cartItem);
+      } else {
+        const existingCartItem = cart[cartIndex]
+        cartFunctions.incrementQty(existingCartItem)
+      }
+
 
     }
     // console.log('add to cart', productQueryData)
