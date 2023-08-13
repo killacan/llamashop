@@ -16,9 +16,15 @@ const useHasHydrated = () => {
   return hasHydrated;
 };
 
+interface img {
+  src: string,
+  position: string,
+}
+
 export default function ProductPage() {
   const [showImage, setShowImage] = useState<number>(0);
   const [selectedOptions, setSelectedOptions] = useState<Array<number>>([]);
+  const [imgArr, setImgArr] = useState<Array<img>>([]);
   const hasHydrated = useHasHydrated();
 
   const cart = useCartState((state) => (state.cart))
@@ -46,7 +52,13 @@ export default function ProductPage() {
     productQueryData = productQuery.data;
   }
 
-  const currentImg = productQueryData?.images[showImage] as { src: string, position: string };
+  let currentImg = productQueryData?.images[0] as { src: string, position: string };
+
+  if (imgArr[showImage]) {
+    currentImg = imgArr[showImage] as { src: string, position: string };
+  } else {
+    currentImg = productQueryData?.images[0] as { src: string, position: string };
+  }
 
   const productOptions = productQueryData?.options;
 
@@ -72,6 +84,7 @@ export default function ProductPage() {
                   type="radio"
                   name={`option-${rootIndex}`}
                   value={value.id}
+                  checked={selectedOptions[rootIndex] === value.id}
                   onChange={() => handleOptionChange(rootIndex, value.id)}
                 />
                 {value.title}
@@ -89,7 +102,7 @@ export default function ProductPage() {
     setSelectedOptions((prev) => {
       const newOptions = [...prev];
       newOptions[rootIndex] = selectedValue;
-      // console.log(newOptions, 'newOptions')
+      console.log(newOptions, 'newOptions')
       return newOptions;
     }
     );
@@ -142,14 +155,39 @@ export default function ProductPage() {
     // console.log('add to cart', productQueryData)
   }
 
+  useEffect(() => {
+    // find the variant that matches the selected options
+    // filter the images to only show the ones that match the variant.id of the selected variant
+
+    if (productQueryData) {
+      const variant = productQueryData.variants.find((variant) => {
+        return variant.options.every((option, index) => {
+          return option === selectedOptions[index];
+        });
+      }
+      );
+      if (variant) {
+        const variantId = variant.id;
+        const newImgArr = productQueryData.images.filter(img => img.variant_ids.includes(variantId))
+        if (newImgArr.length > 0) {
+          setImgArr(newImgArr);
+        }
+        console.log(imgArr, 'imgArr')
+      }
+    }
+  }, [selectedOptions])
+
   if (productQueryData) {
+
+    // console.log(productQueryData, 'productQueryData')
     return (
       <div className="">
         <div className="flex flex-row justify-center p-10">
           {hasHydrated && productQueryData.images && productQueryData.images[showImage]?.src && (
             <div className="flex flex-row">
               <div className="overflow-y-scroll h-64 pr-3 sticky top-20">
-                {productQueryData.images.map((image, index) => (
+                {imgArr
+                .map((image, index) => (
                   <Image onClick={(e) => handleShowImage (e)} src={image.src} width={50} height={50} alt="product image" key={index} data-index={index} />
                 ))}
               </div>
