@@ -1,7 +1,6 @@
 import { cartItem, useCartState } from "~/components/useCart"
 import Image from 'next/image'
 import { useEffect, useState } from "react";
-import { Product } from "~/components/productInterface";
 
 const useHasHydrated = () => {
     const [hasHydrated, setHasHydrated] = useState<boolean>(false);
@@ -26,18 +25,18 @@ export default function CartPage () {
     const handleIncrement = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         const button = e.target as HTMLButtonElement
         const posString = button.dataset.index as string
-        const itemNum = parseInt(posString) as number
+        const itemNum = parseInt(posString)
         cartFunctions.incrementQty(cart[itemNum])
     }
 
     const handleDecrement = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         const button = e.target as HTMLButtonElement
         const posString = button.dataset.index as string
-        const itemNum = parseInt(posString) as number
+        const itemNum = parseInt(posString)
         cartFunctions.decrementQty(cart[itemNum])
 
         if (typeof cart[itemNum]?.qty === 'number') {
-            let currentItem = cart[itemNum] as cartItem
+            const currentItem = cart[itemNum] as cartItem
             if (currentItem.qty <= 1) {
                 cartFunctions.removeFromCart(currentItem)
             }
