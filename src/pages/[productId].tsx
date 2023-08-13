@@ -108,9 +108,26 @@ export default function ProductPage() {
   const handleAddToCart = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     if (productQueryData) {
-      const cartItem = productQueryData;
+      const cartItemProduct = productQueryData;
+      const cartItemVariant = cartItemProduct.variants.find((variant) => {
+        return variant.options.every((option, index) => {
+          return option === selectedOptions[index];
+        });
+      });
+
+      if (typeof cartItemVariant === 'undefined') {
+        console.log('no variant selected, error adding to cart');
+        return;
+      }
       
+      const cartItem = {
+        product: cartItemProduct,
+        variant: cartItemVariant as { id: number, cost: number, is_available: boolean, is_default: boolean, options: Array<number>},
+        qty: 1,
+      }
+
       addToCart(cartItem);
+
     }
     // console.log('add to cart', productQueryData)
   }
@@ -146,18 +163,10 @@ export default function ProductPage() {
           </form>
 
         </div>
-        
-        
-        
-        {productQueryData.error && (
-          <div>
-            <h1>This Product does not exist</h1>
-          </div>
-        )}
       </div>
     );
   } else {
     // Return null or a loading state if productQuery is not yet ready
-    return null;
+    return <h2>No Product or Loading</h2>;
   }
 }
