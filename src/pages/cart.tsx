@@ -52,9 +52,11 @@ export default function CartPage () {
         setTotal(acc / 100)
     }, [cart])
 
+    const buttonStyle = " border-black border p-2"
+
     return (
         <div className="flex flex-row p-10 items-center justify-center">
-            <div className="">
+            <div className="flex flex-col min-h-full">
                 <h1 className="text-2xl pl-10"> Cart </h1>
                 <div className="divide-y divide-black">
                     {hasHydrated && cart.map((item, index) => (
@@ -64,17 +66,18 @@ export default function CartPage () {
                                 <h2>{item.product.title}</h2>
                                 <p>{item.variant.title}</p>
                                 <div className="flex ">
-                                    <button onClick={(e) => handleIncrement(e)} data-index={index}>+</button>
-                                    <p>Quantity: {item.qty}</p>
-                                    <button onClick={(e) => handleDecrement(e)} data-index={index}>-</button>
+                                    <button className={`${buttonStyle}`} onClick={(e) => handleIncrement(e)} data-index={index}>+</button>
+                                    <p className={`${buttonStyle}`}>Quantity: {item.qty}</p>
+                                    <button className={`${buttonStyle}`} onClick={(e) => handleDecrement(e)} data-index={index}>-</button>
                                 </div>
                                 {/* <div dangerouslySetInnerHTML={{__html: item.product.description}}></div> */}
                             </div>
                             
                         </div>
                     ))}
+                    {cart.length === 0 && <p>Cart is empty</p>}
                 </div>
-                <button className="border border-white p-3 rounded-full bg-violet-500 hover:bg-blue-800 cursor-pointer" onClick={cartFunctions.removeAllFromCart}>Remove All</button>
+                {cart.length > 0 && <button className="border border-white p-3 rounded-full bg-violet-500 hover:bg-blue-800 cursor-pointer mx-auto my-5" onClick={cartFunctions.removeAllFromCart}>Remove All</button>}
             </div>
             <div className="h-full">
                 <div className="flex flex-col border border-gray-500 p-10 m-5 sticky top-20">

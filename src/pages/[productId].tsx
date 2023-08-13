@@ -167,26 +167,31 @@ export default function ProductPage() {
       }
       );
       if (variant) {
+        console.log(variant, 'variant')
         const variantId = variant.id;
         const newImgArr = productQueryData.images.filter(img => img.variant_ids.includes(variantId))
         if (newImgArr.length > 0) {
           setImgArr(newImgArr);
         }
-        // console.log(imgArr, 'imgArr')
+        console.log(newImgArr, 'imgArr')
       }
     }
   }, [selectedOptions])
 
   if (productQueryData) {
 
-    // console.log(productQueryData, 'productQueryData')
+    console.log(productQueryData, 'productQueryData')
     return (
       <div className="">
         <div className="flex flex-row justify-center p-10">
           {hasHydrated && productQueryData.images && productQueryData.images[showImage]?.src && (
             <div className="flex flex-row">
               <div className="overflow-y-scroll h-64 pr-3 sticky top-20">
-                {imgArr
+                {imgArr.length > 0 && imgArr
+                .map((image, index) => (
+                  <Image onClick={(e) => handleShowImage (e)} src={image.src} width={50} height={50} alt="product image" key={index} data-index={index} />
+                ))}
+                {imgArr.length === 0 && productQueryData.images
                 .map((image, index) => (
                   <Image onClick={(e) => handleShowImage (e)} src={image.src} width={50} height={50} alt="product image" key={index} data-index={index} />
                 ))}
