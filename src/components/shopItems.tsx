@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { Product } from './productInterface';
+import { type Product } from './productInterface';
 
 interface ShopState {
   shopItems: Array<Product>,

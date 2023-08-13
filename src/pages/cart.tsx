@@ -1,4 +1,4 @@
-import { cartItem, useCartState } from "~/components/useCart"
+import { type cartItem, useCartState } from "~/components/useCart"
 import Image from 'next/image'
 import { useEffect, useState } from "react";
 

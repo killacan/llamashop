@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { api } from "~/utils/api";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import { cartItem, useCartState } from "~/components/useCart";
+import { type cartItem, useCartState } from "~/components/useCart";
 import { shopItemsState } from "~/components/shopItems";
-import { Product } from '~/components/productInterface';
+import { type Product } from '~/components/productInterface';
 
 const useHasHydrated = () => {
   const [hasHydrated, setHasHydrated] = useState<boolean>(false);
@@ -102,7 +102,7 @@ export default function ProductPage() {
     setSelectedOptions((prev) => {
       const newOptions = [...prev];
       newOptions[rootIndex] = selectedValue;
-      console.log(newOptions, 'newOptions')
+      // console.log(newOptions, 'newOptions')
       return newOptions;
     }
     );
@@ -172,7 +172,7 @@ export default function ProductPage() {
         if (newImgArr.length > 0) {
           setImgArr(newImgArr);
         }
-        console.log(imgArr, 'imgArr')
+        // console.log(imgArr, 'imgArr')
       }
     }
   }, [selectedOptions])
