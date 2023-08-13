@@ -85,15 +85,15 @@ export default function ProductPage() {
   
   const handleOptionChange = (rootIndex:number, selectedValue:number) => {
     // Implement your logic to update the selected option for the specific index
-    console.log(`Option ${rootIndex} selected: ${selectedValue}`);
+    // console.log(`Option ${rootIndex} selected: ${selectedValue}`);
     setSelectedOptions((prev) => {
       const newOptions = [...prev];
       newOptions[rootIndex] = selectedValue;
-      console.log(newOptions, 'newOptions')
+      // console.log(newOptions, 'newOptions')
       return newOptions;
     }
     );
-    console.log(selectedOptions, 'selectedOptions')
+    // console.log(selectedOptions, 'selectedOptions')
   };
 
   const handleShowImage = (e: React.MouseEvent<HTMLImageElement, MouseEvent>) => {

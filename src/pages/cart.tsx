@@ -20,7 +20,7 @@ export default function CartPage () {
     const cart = useCartState((state) => state.cart)
     const cartFunctions = useCartState((state) => state)
 
-    console.log(cart)
+    // console.log(cart)
 
     const handleIncrement = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         const button = e.target as HTMLButtonElement
