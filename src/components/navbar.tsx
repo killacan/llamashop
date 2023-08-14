@@ -3,8 +3,11 @@ import { useUser } from "@clerk/clerk-react";
 import Link from "next/link";
 import { TiShoppingCart } from "react-icons/ti";
 import { useCartState } from "./useCart";
+import hasHydratedCheck from "./hasHydrated";
 
 export default function Navbar () {
+
+    const hasHydrated = hasHydratedCheck();
 
     const user = useUser();
     const cart = useCartState(state => state.cart);
@@ -35,7 +38,7 @@ export default function Navbar () {
                 </SignOutButton>}
                 <Link className="p-2 ml-3 border border-white rounded-full bg-violet-500 hover:bg-blue-800 cursor-pointer relative" href={"/cart"} >
                     <TiShoppingCart className="text-white text-3xl cursor-pointer " />
-                    {cart.length > 0 && <div className="absolute top-0 right-0 bg-red-500 rounded-full text-white text-xs p-1">{acc}</div>}
+                    {hasHydrated && cart.length > 0 && <div className="absolute top-0 right-0 bg-red-500 rounded-full text-white text-xs p-1">{acc}</div>}
                 </Link>
             </div>
             {/* <div className="block lg:hidden">
