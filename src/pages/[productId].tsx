@@ -82,6 +82,7 @@ export default function ProductPage() {
               if (selectedOptions[rootIndex] === value.id) {
                 return <label className="border border-black rounded-sm flex items-center justify-center bg-gray-300" key={index}>
                   <input
+                    className='hidden'
                     type="radio"
                     name={`option-${rootIndex}`}
                     value={value.id}
@@ -94,6 +95,7 @@ export default function ProductPage() {
               } else {
                 return <label className="border border-black rounded-sm flex items-center justify-center" key={index}>
                   <input
+                    className='hidden'
                     type="radio"
                     name={`option-${rootIndex}`}
                     value={value.id}
