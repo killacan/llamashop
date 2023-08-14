@@ -78,18 +78,32 @@ export default function ProductPage() {
           <h2>{option.name}</h2>
           <p>{option.type}:</p>
           <div className="grid grid-cols-4 gap-2">
-            {option.values.map((value, index) => (
-              <label className="border border-black rounded-sm flex items-center justify-center" key={index}>
-                <input
-                  type="radio"
-                  name={`option-${rootIndex}`}
-                  value={value.id}
-                  checked={selectedOptions[rootIndex] === value.id}
-                  onChange={() => handleOptionChange(rootIndex, value.id)}
-                />
-                {value.title}
-              </label>
-            ))}
+            {option.values.map((value, index) => {
+              if (selectedOptions[rootIndex] === value.id) {
+                return <label className="border border-black rounded-sm flex items-center justify-center bg-gray-300" key={index}>
+                  <input
+                    type="radio"
+                    name={`option-${rootIndex}`}
+                    value={value.id}
+                    checked={selectedOptions[rootIndex] === value.id}
+                    onChange={() => handleOptionChange(rootIndex, value.id)}
+                  />
+                  {value.title}
+                </label>
+
+              } else {
+                return <label className="border border-black rounded-sm flex items-center justify-center" key={index}>
+                  <input
+                    type="radio"
+                    name={`option-${rootIndex}`}
+                    value={value.id}
+                    checked={selectedOptions[rootIndex] === value.id}
+                    onChange={() => handleOptionChange(rootIndex, value.id)}
+                  />
+                  {value.title}
+                </label>
+              }
+            })}
           </div>
         </div>
       ));
@@ -167,13 +181,13 @@ export default function ProductPage() {
       }
       );
       if (variant) {
-        console.log(variant, 'variant')
+        // console.log(variant, 'variant')
         const variantId = variant.id;
         const newImgArr = productQueryData.images.filter(img => img.variant_ids.includes(variantId))
         if (newImgArr.length > 0) {
           setImgArr(newImgArr);
         }
-        console.log(newImgArr, 'imgArr')
+        // console.log(newImgArr, 'imgArr')
       }
     }
   }, [selectedOptions])
