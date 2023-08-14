@@ -193,7 +193,7 @@ export default function ProductPage() {
           setImgArr(newImgArr);
         }
         setVarPrice(makePrice(variant.cost));
-        console.log(varPrice, 'varPrice')
+        // console.log(varPrice, 'varPrice')
         // console.log(newImgArr, 'imgArr')
       }
     }

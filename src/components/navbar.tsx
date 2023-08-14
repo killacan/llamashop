@@ -25,7 +25,7 @@ export default function Navbar () {
                 <Link href={"/"} ><span className="font-semibold text-xl tracking-tight p-5">Leisure Llama Lounge</span></Link>
             </div>
             <div className="flex items-center">
-                {!user.isSignedIn && <SignInButton  >
+                {/* {!user.isSignedIn && <SignInButton  >
                     <div className={signButtonTailwind}> 
                         Sign In → 
                     </div>
@@ -35,7 +35,7 @@ export default function Navbar () {
                     <div className={signButtonTailwind}>
                         Sign Out →
                     </div>
-                </SignOutButton>}
+                </SignOutButton>} */}
                 <Link className="p-2 ml-3 border border-white rounded-full bg-violet-500 hover:bg-blue-800 cursor-pointer relative" href={"/cart"} >
                     <TiShoppingCart className="text-white text-3xl cursor-pointer " />
                     {hasHydrated && cart.length > 0 && <div className="absolute top-0 right-0 bg-red-500 rounded-full text-white text-xs p-1">{acc}</div>}
