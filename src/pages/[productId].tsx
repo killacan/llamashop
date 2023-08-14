@@ -5,6 +5,7 @@ import Image from "next/image";
 import { type cartItem, useCartState } from "~/components/useCart";
 import { shopItemsState } from "~/components/shopItems";
 import { type Product } from '~/components/productInterface';
+import { makePrice } from '~/components/pricing';
 
 const useHasHydrated = () => {
   const [hasHydrated, setHasHydrated] = useState<boolean>(false);
@@ -25,6 +26,7 @@ export default function ProductPage() {
   const [showImage, setShowImage] = useState<number>(0);
   const [selectedOptions, setSelectedOptions] = useState<Array<number>>([]);
   const [imgArr, setImgArr] = useState<Array<img>>([]);
+  const [varPrice, setVarPrice] = useState<number>(0);
   const hasHydrated = useHasHydrated();
 
   const cart = useCartState((state) => (state.cart))
@@ -74,7 +76,7 @@ export default function ProductPage() {
   const optionsBuilder = () => {
     if (productOptions) {
       return productOptions.map((option, rootIndex) => (
-        <div key={rootIndex}>
+        <div className='pb-5' key={rootIndex}>
           <h2>{option.name}</h2>
           <p>{option.type}:</p>
           <div className="grid grid-cols-4 gap-2">
@@ -171,6 +173,7 @@ export default function ProductPage() {
     // console.log('add to cart', productQueryData)
   }
 
+  // let varPrice = 0;
   useEffect(() => {
     // find the variant that matches the selected options
     // filter the images to only show the ones that match the variant.id of the selected variant
@@ -189,6 +192,8 @@ export default function ProductPage() {
         if (newImgArr.length > 0) {
           setImgArr(newImgArr);
         }
+        setVarPrice(makePrice(variant.cost));
+        console.log(varPrice, 'varPrice')
         // console.log(newImgArr, 'imgArr')
       }
     }
@@ -196,7 +201,7 @@ export default function ProductPage() {
 
   if (productQueryData) {
 
-    console.log(productQueryData, 'productQueryData')
+    // console.log(productQueryData, 'productQueryData')
     return (
       <div className="">
         <div className="flex flex-row justify-center p-10">
@@ -222,9 +227,10 @@ export default function ProductPage() {
             </div>
           )}
           <form className="flex flex-col">
-            <h1 className="text-2xl lg:m-12">{productQueryData.title}</h1>
+            <h1 className="text-2xl lg:mb-10">{productQueryData.title}</h1>
+            <p className="text-lg my-3">${varPrice}</p>
             {hasHydrated && productOptions && optionsBuilder()}
-            <div className="text-lg lg:my-12 w-96" dangerouslySetInnerHTML={{__html: productQueryData.description}}></div>
+            <div className="text-lg lg:mb-12 w-96" dangerouslySetInnerHTML={{__html: productQueryData.description}}></div>
           
             <button className="text-white w-3/4 h-10 mx-auto bg-violet-700 rounded-full hover:bg-violet-500" onClick={(e) => handleAddToCart (e)}>
               Add to Cart
