@@ -1,6 +1,7 @@
 import { type cartItem, useCartState } from "~/components/useCart"
 import Image from 'next/image'
 import { useEffect, useState } from "react";
+import { makePrice } from "~/components/pricing";
 
 const useHasHydrated = () => {
     const [hasHydrated, setHasHydrated] = useState<boolean>(false);
@@ -47,21 +48,36 @@ export default function CartPage () {
     useEffect(() => {
         let acc = 0
         cart.forEach(cartItem => {
-            acc += cartItem.qty * cartItem.variant.cost
+            acc += cartItem.qty * makePrice(cartItem.variant.cost)
         })
-        setTotal(acc / 100)
+        setTotal(acc)
     }, [cart])
+
+    const showImg = (item:cartItem) => {
+        const currentVariantId = item.variant.id 
+        const newShowImgArr = item.product.images.filter(img => {
+            return img.variant_ids.includes(currentVariantId)   
+        })
+        if (newShowImgArr.length > 0 && newShowImgArr[0]) {
+            return <Image src={newShowImgArr[0].src} alt="product image" width={200} height={200} />
+            
+
+        } else {
+            if (item.product.images[0])
+            return <Image src={item.product.images[0]?.src} alt="product image" width={200} height={200} />
+        }
+    }
 
     const buttonStyle = " border-black border p-2"
 
     return (
         <div className="flex flex-row p-10 items-center justify-center">
             <div className="flex flex-col min-h-full">
-                <h1 className="text-2xl pl-10"> Cart </h1>
+                <h1 className="text-2xl pt-10 w-[480px]"> Cart </h1>
                 <div className="divide-y divide-black">
                     {hasHydrated && cart.map((item, index) => (
                         <div key={index} className="flex flex-row">
-                            {item.product.images[0] && <Image src={item.product.images[0]?.src} alt="product image" width={200} height={200} />}
+                            {item.product.images[0] && showImg(item)}
                             <div>
                                 <h2>{item.product.title}</h2>
                                 <p>{item.variant.title}</p>

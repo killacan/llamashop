@@ -185,15 +185,15 @@ export default function ProductPage() {
       <div className="">
         <div className="flex flex-row justify-center p-10">
           {hasHydrated && productQueryData.images && productQueryData.images[showImage]?.src && (
-            <div className="flex flex-row">
+            <div className="flex flex-row pr-10">
               <div className="overflow-y-scroll h-64 pr-3 sticky top-20">
                 {imgArr.length > 0 && imgArr
                 .map((image, index) => (
-                  <Image onClick={(e) => handleShowImage (e)} src={image.src} width={50} height={50} alt="product image" key={index} data-index={index} />
+                  <Image className='cursor-pointer' onClick={(e) => handleShowImage (e)} src={image.src} width={50} height={50} alt="product image" key={index} data-index={index} />
                 ))}
                 {imgArr.length === 0 && productQueryData.images
                 .map((image, index) => (
-                  <Image onClick={(e) => handleShowImage (e)} src={image.src} width={50} height={50} alt="product image" key={index} data-index={index} />
+                  <Image className='cursor-pointer' onClick={(e) => handleShowImage (e)} src={image.src} width={50} height={50} alt="product image" key={index} data-index={index} />
                 ))}
               </div>
               <Image
@@ -208,7 +208,7 @@ export default function ProductPage() {
           <form className="flex flex-col">
             <h1 className="text-2xl lg:m-12">{productQueryData.title}</h1>
             {hasHydrated && productOptions && optionsBuilder()}
-            <div className="text-lg lg:m-12 w-96" dangerouslySetInnerHTML={{__html: productQueryData.description}}></div>
+            <div className="text-lg lg:my-12 w-96" dangerouslySetInnerHTML={{__html: productQueryData.description}}></div>
           
             <button className="text-white w-3/4 h-10 mx-auto bg-violet-700 rounded-full hover:bg-violet-500" onClick={(e) => handleAddToCart (e)}>
               Add to Cart
