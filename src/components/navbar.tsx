@@ -1,4 +1,4 @@
-import { SignInButton, SignOutButton } from "@clerk/nextjs";
+// import { SignInButton, SignOutButton } from "@clerk/nextjs";
 import { useUser } from "@clerk/clerk-react";
 import Link from "next/link";
 import { TiShoppingCart } from "react-icons/ti";
@@ -22,7 +22,7 @@ export default function Navbar () {
 
         <nav className="flex items-center content-center justify-between flex-wrap bg-violet-700 p-6 w-full sticky top-0 z-10">
             <div className="flex flex-shrink-0 text-white mr-6">
-                <Link href={"/"} ><span className="font-semibold text-xl tracking-tight p-5">Leisure Llama Lounge</span></Link>
+                <Link href={"/"} ><span className="font-semibold text-xl tracking-tight p-5 group hover:scale-110 duration-300">Leisure <span className="group-hover:text-[hsl(280,100%,70%)] group hover:scale-110 duration-300">Llama</span> Lounge</span></Link>
             </div>
             <div className="flex items-center">
                 {/* {!user.isSignedIn && <SignInButton  >

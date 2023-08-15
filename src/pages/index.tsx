@@ -47,7 +47,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>leisure llama lounge</title>
+        <title >leisure llama lounge</title>
         <meta name="description" content="Created by Leisure llama" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -67,7 +67,7 @@ export default function Home() {
           </div>
 
           <div className="">
-            <h2 className="text-2xl">products</h2>
+            <h2 className="text-2xl">Products:</h2>
             <div className="grid grid-cols-3 gap-5">
               {hasHydrated && productsBuilder()}
             </div>
