@@ -5,7 +5,7 @@ import { type Product } from "~/components/productInterface";
 import { useEffect, useState } from "react";
 import { shopItemsState } from "~/components/shopItems";
 
-const useHasHydrated = () => {
+export const useHasHydrated = () => {
     const [hasHydrated, setHasHydrated] = useState<boolean>(false);
   
     useEffect(() => {

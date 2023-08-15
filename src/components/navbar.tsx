@@ -3,11 +3,11 @@ import { useUser } from "@clerk/clerk-react";
 import Link from "next/link";
 import { TiShoppingCart } from "react-icons/ti";
 import { useCartState } from "./useCart";
-import hasHydratedCheck from "./hasHydrated";
+import { useHasHydrated } from "~/pages";
 
 export default function Navbar () {
 
-    const hasHydrated = hasHydratedCheck();
+    const hasHydrated = useHasHydrated();
 
     const user = useUser();
     const cart = useCartState(state => state.cart);
