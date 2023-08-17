@@ -9,7 +9,7 @@ export default function Navbar () {
 
     const hasHydrated = useHasHydrated();
 
-    const user = useUser();
+    // const user = useUser();
     const cart = useCartState(state => state.cart);
 
     const signButtonTailwind = "border border-white p-3 rounded-full bg-violet-500 hover:bg-blue-800 cursor-pointer";

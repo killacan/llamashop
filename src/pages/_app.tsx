@@ -9,13 +9,13 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
 
-    <ClerkProvider {...pageProps}>
+    // <ClerkProvider {...pageProps}>
       <div className="grid grid-rows-[70px_1fr] min-h-screen">
         <Navbar />
         <Component {...pageProps} />
       </div>
 
-    </ClerkProvider>
+    // </ClerkProvider>
 
   );
 

@@ -6,16 +6,7 @@ import { type cartItem, useCartState } from "~/components/useCart";
 import { shopItemsState } from "~/components/shopItems";
 import { type Product } from '~/components/productInterface';
 import { makePrice } from '~/components/pricing';
-
-const useHasHydrated = () => {
-  const [hasHydrated, setHasHydrated] = useState<boolean>(false);
-
-  useEffect(() => {
-    setHasHydrated(true);
-  }, []);
-
-  return hasHydrated;
-};
+import { useHasHydrated } from '.';
 
 interface img {
   src: string,

@@ -28,6 +28,6 @@
     "**/*.tsx",
     "**/*.cjs",
     "**/*.mjs"
-  ],
+, "src/components/CheckoutForm.jsx", "src/pages/payments/checkout.js", "src/pages/api/create-payment-intent.js"  ],
   "exclude": ["node_modules"]
 }
