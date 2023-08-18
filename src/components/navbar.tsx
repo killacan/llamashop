@@ -1,5 +1,5 @@
 // import { SignInButton, SignOutButton } from "@clerk/nextjs";
-import { useUser } from "@clerk/clerk-react";
+// import { useUser } from "@clerk/clerk-react";
 import Link from "next/link";
 import { TiShoppingCart } from "react-icons/ti";
 import { useCartState } from "./useCart";
