@@ -2,6 +2,7 @@ import { type cartItem, useCartState } from "~/components/useCart"
 import Image from 'next/image'
 import { useEffect, useState } from "react";
 import { makePrice } from "~/components/pricing";
+import Link from "next/link";
 
 const useHasHydrated = () => {
     const [hasHydrated, setHasHydrated] = useState<boolean>(false);
@@ -101,7 +102,7 @@ export default function CartPage () {
                     <p>Subtotal: ${total} </p>
                     <p>Total: (calculated at checkout)</p>
 
-                    <button className="border border-white p-3 rounded-full bg-violet-500 hover:bg-blue-800 cursor-pointer">Checkout</button>
+                    <Link href={"/payments/checkout"} className="border border-white p-3 rounded-full bg-violet-500 hover:bg-blue-800 cursor-pointer">Checkout</Link>
                 </div>
             </div>
         </div>
