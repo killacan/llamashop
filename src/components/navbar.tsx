@@ -1,5 +1,5 @@
 // import { SignInButton, SignOutButton } from "@clerk/nextjs";
-import { useUser } from "@clerk/clerk-react";
+// import { useUser } from "@clerk/clerk-react";
 import Link from "next/link";
 import { TiShoppingCart } from "react-icons/ti";
 import { useCartState } from "./useCart";
@@ -12,12 +12,13 @@ export default function Navbar () {
     // const user = useUser();
     const cart = useCartState(state => state.cart);
 
-    const signButtonTailwind = "border border-white p-3 rounded-full bg-violet-500 hover:bg-blue-800 cursor-pointer";
+    // const signButtonTailwind = "border border-white p-3 rounded-full bg-violet-500 hover:bg-blue-800 cursor-pointer";
 
     let acc = 0
-    const indicatorNum = cart.forEach(item => {
+    cart.forEach(item => {
         acc += item.qty
     })
+
     return (
 
         <nav className="flex items-center content-center justify-between flex-wrap bg-violet-700 p-6 w-full sticky top-0 z-10">

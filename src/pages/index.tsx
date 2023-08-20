@@ -24,7 +24,7 @@ export default function Home() {
   const hasHydrated = useHasHydrated();
   const { shopItems, setShopItems } = shopItemsState((state) => state);
 
-  const products = api.shopRouter.getProducts.useQuery(undefined, {
+  api.shopRouter.getProducts.useQuery(undefined, {
     enabled: shopItems.length === 0,
     onSuccess: (data) => {
       setShopItems(data.data);
@@ -51,10 +51,10 @@ export default function Home() {
         <meta name="description" content="Created by Leisure llama" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex min-h-full flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
+      <main className="flex min-h-full flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white text-center">
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
-          <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-            Leisure <span className="text-[hsl(280,100%,70%)]">Llama</span> Lounge
+          <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem] group hover:text-[hsl(280,100%,70%)] duration-300">
+            Leisure <span className="text-[hsl(280,100%,70%)] group-hover:text-white duration-300">Llama</span> Lounge
           </h1>
 
           <p className="text-2xl text-white">
@@ -67,8 +67,8 @@ export default function Home() {
           </div>
 
           <div className="">
-            <h2 className="text-2xl">Products:</h2>
-            <div className="grid grid-cols-3 gap-5">
+            <h2 className="text-2xl pb-5">Products:</h2>
+            <div className="grid lg:grid-cols-3 sm:grid-cols-2 gap-5">
               {hasHydrated && productsBuilder()}
             </div>
           </div>

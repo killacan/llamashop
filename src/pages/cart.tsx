@@ -2,6 +2,8 @@ import { type cartItem, useCartState } from "~/components/useCart"
 import Image from 'next/image'
 import { useEffect, useState } from "react";
 import { makePrice } from "~/components/pricing";
+import { TfiTrash } from 'react-icons/tfi';
+import Link from "next/link";
 
 const useHasHydrated = () => {
     const [hasHydrated, setHasHydrated] = useState<boolean>(false);
@@ -71,16 +73,17 @@ export default function CartPage () {
     const buttonStyle = " border-black border p-2"
 
     return (
-        <div className="flex flex-row p-10 items-center justify-center">
-            <div className="flex flex-col min-h-full">
+        <div className="flex lg:flex-row flex-col p-10 justify-center">
+            <div className="flex flex-col">
                 <h1 className="text-2xl pt-10 w-[480px]"> Cart </h1>
                 <div className="divide-y divide-black">
                     {hasHydrated && cart.map((item, index) => (
-                        <div key={index} className="flex flex-row">
+                        <div key={index} className="flex flex-row justify-around">
                             {item.product.images[0] && showImg(item)}
                             <div>
-                                <h2>{item.product.title}</h2>
+                                <Link href={item.product.id}>{item.product.title}</Link>
                                 <p>{item.variant.title}</p>
+                                <p>Price: ${makePrice(item.variant.cost)}</p>
                                 <div className="flex ">
                                     <button className={`${buttonStyle}`} onClick={(e) => handleIncrement(e)} data-index={index}>+</button>
                                     <p className={`${buttonStyle}`}>Quantity: {item.qty}</p>
@@ -88,20 +91,21 @@ export default function CartPage () {
                                 </div>
                                 {/* <div dangerouslySetInnerHTML={{__html: item.product.description}}></div> */}
                             </div>
+                            <button className={`${buttonStyle} h-8 rounded-full my-auto`} onClick={() => cartFunctions.removeFromCart(item)}><TfiTrash /></button>
                             
                         </div>
                     ))}
                     {cart.length === 0 && <p>Cart is empty</p>}
                 </div>
-                {cart.length > 0 && <button className="border border-white p-3 rounded-full bg-violet-500 hover:bg-blue-800 cursor-pointer mx-auto my-5" onClick={cartFunctions.removeAllFromCart}>Remove All</button>}
+                
             </div>
-            <div className="h-full">
-                <div className="flex flex-col border border-gray-500 p-10 m-5 sticky top-20">
+            <div className="h-full m-auto">
+                <div className="flex flex-col border border-gray-500 p-10 m-5 sticky top-20 w-96">
                     <h2 className="text-2xl"> Summary </h2>
                     <p>Subtotal: ${total} </p>
                     <p>Total: (calculated at checkout)</p>
 
-                    <button className="border border-white p-3 rounded-full bg-violet-500 hover:bg-blue-800 cursor-pointer">Checkout</button>
+                    <button className="border border-white p-3 w-44 mx-auto mt-3 rounded-full bg-violet-500 hover:bg-blue-800 cursor-pointer ">Checkout</button>
                 </div>
             </div>
         </div>

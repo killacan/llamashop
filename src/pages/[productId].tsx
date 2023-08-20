@@ -18,6 +18,7 @@ export default function ProductPage() {
   const [selectedOptions, setSelectedOptions] = useState<Array<number>>([]);
   const [imgArr, setImgArr] = useState<Array<img>>([]);
   const [varPrice, setVarPrice] = useState<number>(0);
+  const [isAddingToCart, setIsAddingToCart] = useState<boolean>(false);
   const hasHydrated = useHasHydrated();
 
   const cart = useCartState((state) => (state.cart))
@@ -129,6 +130,9 @@ export default function ProductPage() {
 
   const handleAddToCart = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
+
+    setIsAddingToCart(true);
+
     if (productQueryData) {
       const cartItemProduct = productQueryData;
       const cartItemVariant = cartItemProduct.variants.find((variant) => {
@@ -158,6 +162,9 @@ export default function ProductPage() {
         cartFunctions.incrementQty(existingCartItem)
       }
 
+      setTimeout(() => {
+        setIsAddingToCart(false);
+      }, 500)
 
     }
     // console.log('add to cart', productQueryData)
@@ -187,7 +194,7 @@ export default function ProductPage() {
         // console.log(newImgArr, 'imgArr')
       }
     }
-  }, [selectedOptions])
+  }, [selectedOptions, productQueryData])
 
   if (productQueryData) {
 
@@ -196,15 +203,15 @@ export default function ProductPage() {
       <div className="">
         <div className="flex lg:flex-row flex-col justify-center p-10">
           {hasHydrated && productQueryData.images && productQueryData.images[showImage]?.src && (
-            <div className="flex flex-row pr-10">
-              <div className="overflow-y-scroll h-96 pr-3 sticky top-20">
+            <div className="flex flex-row lg:pr-10 justify-center">
+              <div className="overflow-y-scroll h-96 w-16 pr-3 sticky top-20">
                 {imgArr.length > 0 && imgArr
                 .map((image, index) => (
-                  <Image className='cursor-pointer' onClick={(e) => handleShowImage (e)} src={image.src} width={50} height={50} alt="product image" key={index} data-index={index} />
+                  <Image className='cursor-pointer w-full' onClick={(e) => handleShowImage (e)} src={image.src} width={50} height={50} alt="product image" key={index} data-index={index} />
                 ))}
                 {imgArr.length === 0 && productQueryData.images
                 .map((image, index) => (
-                  <Image className='cursor-pointer' onClick={(e) => handleShowImage (e)} src={image.src} width={50} height={50} alt="product image" key={index} data-index={index} />
+                  <Image className='cursor-pointer w-full' onClick={(e) => handleShowImage (e)} src={image.src} width={50} height={50} alt="product image" key={index} data-index={index} />
                 ))}
               </div>
               <Image
@@ -222,8 +229,12 @@ export default function ProductPage() {
             {hasHydrated && productOptions && optionsBuilder()}
             <div className="text-lg lg:mb-12 w-96" dangerouslySetInnerHTML={{__html: productQueryData.description}}></div>
           
-            <button className="text-white w-3/4 h-10 mx-auto bg-violet-700 rounded-full hover:bg-violet-500" onClick={(e) => handleAddToCart (e)}>
-              Add to Cart
+            <button 
+              className="text-white w-3/4 h-10 mx-auto bg-violet-700 rounded-full hover:bg-violet-500" 
+              onClick={(e) => handleAddToCart (e)}
+              disabled={isAddingToCart}
+            >
+              {isAddingToCart ? 'Adding...' : 'Add to Cart'}
             </button>
           </form>
 
