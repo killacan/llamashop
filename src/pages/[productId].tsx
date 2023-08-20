@@ -68,7 +68,6 @@ export default function ProductPage() {
     if (productOptions) {
       return productOptions.map((option, rootIndex) => (
         <div className='pb-5' key={rootIndex}>
-          <h2>{option.name}</h2>
           <p>{option.type}:</p>
           <div className="grid grid-cols-4 gap-2">
             {option.values.map((value, index) => {
@@ -195,10 +194,10 @@ export default function ProductPage() {
     // console.log(productQueryData, 'productQueryData')
     return (
       <div className="">
-        <div className="flex flex-row justify-center p-10">
+        <div className="flex lg:flex-row flex-col justify-center p-10">
           {hasHydrated && productQueryData.images && productQueryData.images[showImage]?.src && (
             <div className="flex flex-row pr-10">
-              <div className="overflow-y-scroll h-64 pr-3 sticky top-20">
+              <div className="overflow-y-scroll h-96 pr-3 sticky top-20">
                 {imgArr.length > 0 && imgArr
                 .map((image, index) => (
                   <Image className='cursor-pointer' onClick={(e) => handleShowImage (e)} src={image.src} width={50} height={50} alt="product image" key={index} data-index={index} />
@@ -209,10 +208,10 @@ export default function ProductPage() {
                 ))}
               </div>
               <Image
-                className="h-64 w-64 sticky top-20"
+                className="h-96 w-96 sticky top-20"
                 src={currentImg.src}
-                width={500}
-                height={500}
+                width={1000}
+                height={1000}
                 alt="product image"
               />
             </div>
