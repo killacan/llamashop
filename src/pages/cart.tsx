@@ -95,7 +95,7 @@ export default function CartPage () {
                             
                         </div>
                     ))}
-                    {cart.length === 0 && <p>Cart is empty</p>}
+                    {hasHydrated && cart.length === 0 && <p>Cart is empty</p>}
                 </div>
                 
             </div>
