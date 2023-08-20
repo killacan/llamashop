@@ -201,7 +201,7 @@ export default function ProductPage() {
     // console.log(productQueryData, 'productQueryData')
     return (
       <div className="">
-        <div className="flex lg:flex-row flex-col justify-center p-10">
+        <div className="flex lg:flex-row flex-col justify-center sm:p-10">
           {hasHydrated && productQueryData.images && productQueryData.images[showImage]?.src && (
             <div className="flex flex-row lg:pr-10 justify-center">
               <div className="overflow-y-scroll h-96 w-16 pr-3 sticky top-20">
