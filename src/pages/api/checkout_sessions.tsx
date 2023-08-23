@@ -1,24 +1,36 @@
-import { useCartState } from "~/components/useCart";
-import { makeStripePrice } from "~/components/pricing";
+/* eslint-disable */
 
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+import { makeStripePrice } from "~/components/pricing";
+import { cartItem } from "~/components/useCart";
+
+
+export const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 export default async function handler(req: any, res:any) {
+  console.log("hit the handler")
   if (req.method === 'POST') {
+    const cart = JSON.parse(req.body.cart);
 
-    const cart = useCartState(state => state.cart)
+    if (!cart) {
+      res.status(400).json({error: `${req}`})
+    }
+    let line_items: Array<unknown> = []
 
-    const line_items = cart.map((item) => ({
-        price_data: {
-            currency: 'usd',
-            product_data: {
-                name: item.product.title,
-                images: [item.product.images[0]?.src],
-            },
-            unit_amount: makeStripePrice(item.variant.cost),
-        },
-        quantity: item.qty,
-    }))
+    if (cart.length > 0) {
+      line_items = cart.map((item: cartItem) => ({
+          price_data: {
+              currency: 'usd',
+              product_data: {
+                  name: item.product.title,
+                  images: [item.product.images[0]?.src],
+              },
+              unit_amount: makeStripePrice(item.variant.price),
+          },
+          quantity: item.qty,
+      }))
+    } else {
+      res.status(400).json({error: 'No items in cart'})
+    }
 
     try {
       // Create Checkout Sessions from body params.
@@ -26,9 +38,9 @@ export default async function handler(req: any, res:any) {
         // customer_email: 'customer@example.com',
         // submit_type: 'donate',
         billing_address_collection: 'auto',
-        shipping_address_collection: {
-          allowed_countries: ['US', 'CA'],
-        },
+        // shipping_address_collection: {
+        //   allowed_countries: ['US', 'CA'],
+        // },
         line_items: line_items,
         mode: 'payment',
         success_url: `${req.headers.origin}/?success=true`,

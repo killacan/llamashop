@@ -90,6 +90,41 @@ async function makePrintifySingleItemRequest(path: string, method = "GET", body?
   return data;
 }
 
+async function makePrintifyShippingCostRequest(path: string, method = "POST", body?: unknown) {
+  const apiUrl = "https://api.printify.com/v1";
+  const url = `${apiUrl}/${path}`;
+  const headers = {
+    "Content-Type": "application/json;charset=utf-8",
+    Authorization: `Bearer ${apiKey}`,
+  };
+
+  const options: Options = {
+    method,
+    headers,
+  };
+
+  if (body) {
+    options.body = JSON.stringify(body);
+  }
+
+  interface ShippingResponse {
+    standard: number,
+    express: number,
+    priority: number,
+    printify_express: number,
+    error?: string
+  }
+
+  const response = await fetch(url, options);
+  const data: ShippingResponse = (await response.json()) as ShippingResponse;
+
+  if (!response.ok && data.error) {
+    throw new Error(`Request to Printify API failed: ${data.error}`);
+  }
+
+  return data;
+}
+
 export const shopRouter = createTRPCRouter({
   getShops: publicProcedure
     // .input(z.object({}))
@@ -119,6 +154,11 @@ export const shopRouter = createTRPCRouter({
         return product;
     }
   ),
+  getShippingCost: publicProcedure
+    .input(z.object({ order: z.object({ address_to: z.object({ first_name: z.string(), last_name: z.string(), address1: z.string(), address2: z.string(), city: z.string(), country_code: z.string(), region: z.string(), zip: z.string() }), line_items: z.object({product_id: z.string(), variant_id: z.number(), quantity: z.number()}).array() }) }))
+    .query(async (opts) => {
+
+    })
 });
 
 // Define your TRPC API handler

@@ -19,6 +19,7 @@ export default function ProductPage() {
   const [imgArr, setImgArr] = useState<Array<img>>([]);
   const [varPrice, setVarPrice] = useState<number>(0);
   const [isAddingToCart, setIsAddingToCart] = useState<boolean>(false);
+  const [isAvailable, setIsAvailable] = useState<boolean>(true);
   const hasHydrated = useHasHydrated();
 
   const cart = useCartState((state) => (state.cart))
@@ -73,7 +74,7 @@ export default function ProductPage() {
           <div className="grid grid-cols-4 gap-2">
             {option.values.map((value, index) => {
               if (selectedOptions[rootIndex] === value.id) {
-                return <label className="border border-black rounded-sm flex items-center justify-center bg-gray-300" key={index}>
+                return <label className="border border-black cursor-pointer rounded-sm flex items-center justify-center bg-gray-300" key={index}>
                   <input
                     className='hidden'
                     type="radio"
@@ -86,7 +87,7 @@ export default function ProductPage() {
                 </label>
 
               } else {
-                return <label className="border border-black rounded-sm flex items-center justify-center" key={index}>
+                return <label className="border border-black cursor-pointer rounded-sm flex items-center justify-center" key={index}>
                   <input
                     className='hidden'
                     type="radio"
@@ -143,28 +144,43 @@ export default function ProductPage() {
 
       if (typeof cartItemVariant === 'undefined') {
         console.log('no variant selected, error adding to cart');
+        setIsAvailable(false);
+        setTimeout(() => {
+          setIsAddingToCart(false);
+          setIsAvailable(true);
+        }, 500)
         return;
       }
       
       const cartItem: cartItem = {
         product: cartItemProduct,
-        variant: cartItemVariant as { id: number, cost: number, is_available: boolean, is_default: boolean, options: Array<number>, title: string},
+        variant: cartItemVariant as { id: number, cost: number, is_available: boolean, is_default: boolean, options: Array<number>, title: string, price: number},
         qty: 1,
       }
 
       const cartIndex = cart.findIndex(item => item.product.id === cartItem.product.id && 
         item.variant.id === cartItem.variant.id);
 
-      if (cartIndex === -1) {
-        cartFunctions.addToCart(cartItem);
-      } else {
-        const existingCartItem = cart[cartIndex]
-        cartFunctions.incrementQty(existingCartItem)
-      }
+      if (cartItemVariant.is_available) {
+        if (cartIndex === -1) {
+          cartFunctions.addToCart(cartItem);
+        } else {
+          const existingCartItem = cart[cartIndex]
+          cartFunctions.incrementQty(existingCartItem)
+        }
+  
+        setTimeout(() => {
+          setIsAddingToCart(false);
+        }, 500)
 
-      setTimeout(() => {
-        setIsAddingToCart(false);
-      }, 500)
+      } else {
+        console.log('item not available')
+        setIsAvailable(false);
+        setTimeout(() => {
+          setIsAvailable(true);
+          setIsAddingToCart(false);
+        }, 1000)
+      }
 
     }
     // console.log('add to cart', productQueryData)
@@ -189,7 +205,7 @@ export default function ProductPage() {
         if (newImgArr.length > 0) {
           setImgArr(newImgArr);
         }
-        setVarPrice(makePrice(variant.cost));
+        setVarPrice(makePrice(variant.price));
         // console.log(varPrice, 'varPrice')
         // console.log(newImgArr, 'imgArr')
       }
@@ -229,13 +245,21 @@ export default function ProductPage() {
             {hasHydrated && productOptions && optionsBuilder()}
             <div className="text-lg lg:mb-12 w-96" dangerouslySetInnerHTML={{__html: productQueryData.description}}></div>
           
-            <button 
+            {isAvailable ? <button 
               className="text-white w-3/4 h-10 mx-auto bg-violet-700 rounded-full hover:bg-violet-500" 
               onClick={(e) => handleAddToCart (e)}
               disabled={isAddingToCart}
             >
-              {isAddingToCart ? 'Adding...' : 'Add to Cart'}
+              {(isAddingToCart ? 'Adding...' : 'Add to Cart')}
+            </button> :
+            <button
+              className="text-white w-3/4 h-10 mx-auto bg-red-700 rounded-full hover:bg-red-500"
+              onClick={(e) => handleAddToCart (e)}
+              disabled={isAddingToCart}
+            >
+              {('Not Available')}
             </button>
+            }
           </form>
 
         </div>

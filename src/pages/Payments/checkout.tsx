@@ -1,12 +1,17 @@
 import React from 'react';
 import { loadStripe } from '@stripe/stripe-js';
-
+import { useCartState } from "~/components/useCart";
+import { useHasHydrated } from '..';
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
 );
 export default function PreviewPage() {
+
+  const cart = useCartState((state) => state.cart)
+  const hasHydrated = useHasHydrated()
+
   React.useEffect(() => {
     // Check to see if this is a redirect back from Checkout
     const query = new URLSearchParams(window.location.search);
@@ -21,6 +26,9 @@ export default function PreviewPage() {
 
   return (
     <form action="/api/checkout_sessions" method="POST">
+      {hasHydrated && 
+        <input type='hidden' name={`cart`} value={JSON.stringify(cart)} /> 
+      }
       <section>
         <button type="submit" role="link">
           Checkout

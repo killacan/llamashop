@@ -23,7 +23,9 @@ export default function CartPage () {
     const cart = useCartState((state) => state.cart)
     const cartFunctions = useCartState((state) => state)
 
-    // console.log(cart)
+    console.log(cart)
+
+
 
     const handleIncrement = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         const button = e.target as HTMLButtonElement
@@ -50,7 +52,7 @@ export default function CartPage () {
     useEffect(() => {
         let acc = 0
         cart.forEach(cartItem => {
-            acc += cartItem.qty * makePrice(cartItem.variant.cost)
+            acc += cartItem.qty * makePrice(cartItem.variant.price)
         })
         setTotal(acc)
     }, [cart])
@@ -83,7 +85,7 @@ export default function CartPage () {
                             <div>
                                 <Link href={item.product.id}>{item.product.title}</Link>
                                 <p>{item.variant.title}</p>
-                                <p>Price: ${makePrice(item.variant.cost)}</p>
+                                <p>Price: ${makePrice(item.variant.price)}</p>
                                 <div className="flex ">
                                     <button className={`${buttonStyle}`} onClick={(e) => handleIncrement(e)} data-index={index}>+</button>
                                     <p className={`${buttonStyle}`}>Quantity: {item.qty}</p>
@@ -99,13 +101,23 @@ export default function CartPage () {
                 </div>
                 
             </div>
-            <div className="h-full m-auto">
+            <div className="h-full lg:m-0 m-auto">
                 <div className="flex flex-col border border-gray-500 p-10 m-5 sticky top-20 w-96">
                     <h2 className="text-2xl"> Summary </h2>
                     <p>Subtotal: ${total} </p>
                     <p>Total: (calculated at checkout)</p>
 
-                    <button className="border border-white p-3 w-44 mx-auto mt-3 rounded-full bg-violet-500 hover:bg-blue-800 cursor-pointer ">Checkout</button>
+                    {/* <button className="border border-white p-3 w-44 mx-auto mt-3 rounded-full bg-violet-500 hover:bg-blue-800 cursor-pointer ">Checkout</button> */}
+                    <form action="/api/checkout_sessions" method="POST">
+                        {hasHydrated && 
+                            <input type='hidden' name={`cart`} value={JSON.stringify(cart)} /> 
+                        }
+                        <section className="flex justify-center">
+                            <button className="border border-white p-3 w-44 mt-3 rounded-full bg-violet-500 hover:bg-blue-800 cursor-pointer " type="submit" role="link">
+                                Checkout
+                            </button>
+                        </section>
+                    </form>
                 </div>
             </div>
         </div>
