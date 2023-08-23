@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import Stripe from 'stripe';
 import {NextApiRequest, NextApiResponse} from 'next';
 
