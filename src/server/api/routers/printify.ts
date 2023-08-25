@@ -154,11 +154,15 @@ export const shopRouter = createTRPCRouter({
         return product;
     }
   ),
-  // getShippingCost: publicProcedure
-  //   .input(z.object({ order: z.object({ address_to: z.object({ first_name: z.string(), last_name: z.string(), address1: z.string(), address2: z.string(), city: z.string(), country_code: z.string(), region: z.string(), zip: z.string() }), line_items: z.object({product_id: z.string(), variant_id: z.number(), quantity: z.number()}).array() }) }))
-  //   .query(async (opts) => {
-
-  //   })
+  getShippingCost: publicProcedure
+    .input(z.object({ order: z.object({ address_to: z.object({ first_name: z.string(), last_name: z.string(), address1: z.string(), address2: z.string(), city: z.string(), country_code: z.string(), region: z.string(), zip: z.string() }), line_items: z.object({product_id: z.string(), variant_id: z.number(), quantity: z.number()}).array() }) }))
+    .query(async (opts) => {
+        const { order } = opts.input;
+        // console.log(order, "order");
+        const shippingCost = await makePrintifyShippingCostRequest("/shops/10296800/orders/shipping.json", "POST", order);
+        // console.log(shippingCost, "shippingCost");
+        return shippingCost;
+    })
 });
 
 // Define your TRPC API handler

@@ -18,6 +18,7 @@ const useHasHydrated = () => {
 export default function CartPage () {
 
     const [total, setTotal] = useState(0)
+    const [calcShip, setCalcShip] = useState(false)
 
     const hasHydrated = useHasHydrated();
     const cart = useCartState((state) => state.cart)
@@ -47,6 +48,11 @@ export default function CartPage () {
             }
 
         }
+    }
+
+    const calculateShipping = () => {
+        setCalcShip(true)
+
     }
 
     useEffect(() => {
@@ -108,9 +114,34 @@ export default function CartPage () {
                     <p>Total: (calculated at checkout)</p>
 
                     {/* <button className="border border-white p-3 w-44 mx-auto mt-3 rounded-full bg-violet-500 hover:bg-blue-800 cursor-pointer ">Checkout</button> */}
+                    <form className="flex flex-col" >
+                        <h2 className="text-2xl"> Shipping </h2>
+                        <div className="grid grid-cols-2">
+                            <label htmlFor="fname">First name:</label>
+                            <label htmlFor="lname">Last name:</label>
+                            <input type='text' className="" placeholder='first name' />
+                            <input type='text' className="" placeholder='last name' />
+                        </div>
+                        <label htmlFor="email">Email:</label><br />
+                        <input type='email' className="" placeholder='email' />
+                        <label htmlFor="address1">Address:</label><br />
+                        <input type='text' className="" placeholder='address1' />
+                        <input type='text' className="" placeholder='address2' />
+                        <label htmlFor="city">City:</label><br />
+                        <input type='text' className="" placeholder='city' />
+                        <label htmlFor="state">State:</label><br />
+                        <input type='text' className="" placeholder='state' />
+                        <label htmlFor="zip">Zip:</label><br />
+                        <input type='text' className="" placeholder='zip' />
+                        <label htmlFor="country">Country:</label><br />
+                        <select name='country' id="country">
+                            <option value="US">United States</option>
+                            <option value="CA">Canada</option>
+                        </select>
+                        <button onClick={() => calculateShipping()} className="border border-white p-3 w-44 mx-auto mt-3 rounded-full bg-violet-500 hover:bg-blue-800 cursor-pointer ">Calculate Shipping</button>
+                    </form>
 
-
-                    <form action="/api/checkout_sessions" method="POST">
+                    {calcShip && <form action="/api/checkout_sessions" method="POST">
                         {hasHydrated && 
                             <input type='hidden' name={`cart`} value={JSON.stringify(cart)} /> 
                         }
@@ -119,7 +150,7 @@ export default function CartPage () {
                                 Checkout
                             </button>
                         </section>
-                    </form>
+                    </form>}
                 </div>
             </div>
         </div>
