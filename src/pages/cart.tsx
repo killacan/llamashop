@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { makePrice } from "~/components/pricing";
 import { TfiTrash } from 'react-icons/tfi';
 import Link from "next/link";
+import { AddressSheet } from '@stripe/stripe-react-native';
 
 const useHasHydrated = () => {
     const [hasHydrated, setHasHydrated] = useState<boolean>(false);
@@ -114,7 +115,7 @@ export default function CartPage () {
                     <p>Total: (calculated at checkout)</p>
 
                     {/* <button className="border border-white p-3 w-44 mx-auto mt-3 rounded-full bg-violet-500 hover:bg-blue-800 cursor-pointer ">Checkout</button> */}
-                    <form className="flex flex-col" >
+                    {/* <form className="flex flex-col" >
                         <h2 className="text-2xl"> Shipping </h2>
                         <div className="grid grid-cols-2">
                             <label htmlFor="fname">First name:</label>
@@ -139,7 +140,36 @@ export default function CartPage () {
                             <option value="CA">Canada</option>
                         </select>
                         <button onClick={() => calculateShipping()} className="border border-white p-3 w-44 mx-auto mt-3 rounded-full bg-violet-500 hover:bg-blue-800 cursor-pointer ">Calculate Shipping</button>
-                    </form>
+                    </form> */}
+                    <AddressSheet
+                        visible={true} // You need to provide this prop
+                        onSubmit={(data) => {
+                            // Handle the submit action
+                        }}
+                        onError={(error) => {
+                            // Handle the error
+                        }}
+                        appearance={{
+                            colors: {
+                            primary: '#F8F8F2',
+                            background: '#272822'
+                            }
+                        }}
+                        defaultValues={{
+                            phone: '111-222-3333',
+                            address: {
+                                country: 'United States',
+                                city: 'San Francisco',
+                            },
+                        }}
+                        additionalFields={{
+                            phoneNumber: 'required',
+                        }}
+                        allowedCountries={['US', 'CA', 'GB']}
+                        primaryButtonTitle={'Use this address'}
+                        sheetTitle={'Shipping Address'}
+                        googlePlacesApiKey={'(optional) YOUR KEY HERE'}
+                    />
 
                     {calcShip && <form action="/api/checkout_sessions" method="POST">
                         {hasHydrated && 
