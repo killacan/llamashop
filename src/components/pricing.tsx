@@ -5,5 +5,5 @@ export function makePrice (price: number) {
 }
 
 export function makeStripePrice (price: number) {
-    return Math.round((price))
+    return Math.round((price / 100)) * 100
 }

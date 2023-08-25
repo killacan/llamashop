@@ -108,6 +108,8 @@ export default function CartPage () {
                     <p>Total: (calculated at checkout)</p>
 
                     {/* <button className="border border-white p-3 w-44 mx-auto mt-3 rounded-full bg-violet-500 hover:bg-blue-800 cursor-pointer ">Checkout</button> */}
+
+
                     <form action="/api/checkout_sessions" method="POST">
                         {hasHydrated && 
                             <input type='hidden' name={`cart`} value={JSON.stringify(cart)} /> 

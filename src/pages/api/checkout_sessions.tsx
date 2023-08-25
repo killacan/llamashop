@@ -4,7 +4,7 @@ import { makeStripePrice } from "~/components/pricing";
 import { cartItem } from "~/components/useCart";
 
 
-export const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+export const stripe = require('stripe')(process.env.STRIPE_SECRET_TEST_KEY);
 
 export default async function handler(req: any, res:any) {
   console.log("hit the handler")
@@ -23,6 +23,10 @@ export default async function handler(req: any, res:any) {
               product_data: {
                   name: item.product.title,
                   images: [item.product.images[0]?.src],
+                  metadata: {
+                    product_id: item.product.id,
+                    variant_id: item.variant.id,
+                  }
               },
               unit_amount: makeStripePrice(item.variant.price),
           },
@@ -47,7 +51,10 @@ export default async function handler(req: any, res:any) {
         cancel_url: `${req.headers.origin}/?canceled=true`,
         automatic_tax: {enabled: true},
       });
+
+      // session.metadata = session.id
       res.redirect(303, session.url);
+      console.log(session, 'session')
     } catch (err:any) {
       res.status(err.statusCode || 500).json(err.message);
     }
