@@ -90,7 +90,7 @@ async function makePrintifySingleItemRequest(path: string, method = "GET", body?
   return data;
 }
 
-async function makePrintifyShippingCostRequest(path: string, method = "POST", body?: unknown) {
+async function makePrintifyShippingCostRequest(path: string, method = "POST", body?: any) {
   const apiUrl = "https://api.printify.com/v1";
   const url = `${apiUrl}/${path}`;
   const headers = {
@@ -98,14 +98,27 @@ async function makePrintifyShippingCostRequest(path: string, method = "POST", bo
     Authorization: `Bearer ${apiKey}`,
   };
 
+  interface Options {
+    method: string;
+    headers: {
+        "Content-Type": string;
+        Authorization: string;
+    };
+    line_items?: string;
+    body?: string;
+  }
+
   const options: Options = {
     method,
     headers,
   };
 
   if (body) {
+    // options.body = JSON.stringify(body);
     options.body = JSON.stringify(body);
+    console.log(options.body, "This is the options body");
   }
+
 
   interface ShippingResponse {
     standard: number,
@@ -114,7 +127,7 @@ async function makePrintifyShippingCostRequest(path: string, method = "POST", bo
     printify_express: number,
     error?: string
   }
-
+  console.log("made it here", options, "Also a url", url)
   const response = await fetch(url, options);
   const data: ShippingResponse = (await response.json()) as ShippingResponse;
 
@@ -157,11 +170,13 @@ export const shopRouter = createTRPCRouter({
   getShippingCost: publicProcedure
     .input(z.object({ order: z.object({ address_to: z.object({ first_name: z.string(), last_name: z.string(), address1: z.string(), address2: z.string(), city: z.string(), country_code: z.string(), region: z.string(), zip: z.string() }), line_items: z.object({product_id: z.string(), variant_id: z.number(), quantity: z.number()}).array() }) }))
     .query(async (opts) => {
-        const { order } = opts.input;
+        const { order }  = opts.input;
         // console.log(order, "order");
-        const shippingCost = await makePrintifyShippingCostRequest("/shops/10296800/orders/shipping.json", "POST", order);
+        console.log(order.line_items, "line items");
+        const shippingCost = await makePrintifyShippingCostRequest("shops/10296800/orders/shipping.json", "POST", order);
         // console.log(shippingCost, "shippingCost");
         return shippingCost;
+
     })
 });
 
