@@ -10,6 +10,7 @@ export default async function handler(req: any, res:any) {
   console.log("hit the handler")
   if (req.method === 'POST') {
     const cart = JSON.parse(req.body.cart);
+    const address_to = JSON.parse(req.body.address_to);
 
     if (!cart) {
       res.status(400).json({error: `${req}`})
@@ -50,6 +51,7 @@ export default async function handler(req: any, res:any) {
         success_url: `${req.headers.origin}/?success=true`,
         cancel_url: `${req.headers.origin}/?canceled=true`,
         automatic_tax: {enabled: true},
+        metadata: {address_to: JSON.stringify(address_to)},
       });
 
       // session.metadata = session.id

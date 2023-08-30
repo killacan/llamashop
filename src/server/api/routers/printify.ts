@@ -115,8 +115,12 @@ async function makePrintifyShippingCostRequest(path: string, method = "POST", bo
 
   if (body) {
     // options.body = JSON.stringify(body);
-    options.body = JSON.stringify(body);
-    console.log(options.body, "This is the options body");
+    options.body = JSON.stringify({
+      address_to: body.address_to,
+      line_items: body.line_items
+      });
+    console.log(body, "This is the body");
+    console.log(options.body, "This is the options body")
   }
 
 
@@ -168,7 +172,7 @@ export const shopRouter = createTRPCRouter({
     }
   ),
   getShippingCost: publicProcedure
-    .input(z.object({ order: z.object({ address_to: z.object({ first_name: z.string(), last_name: z.string(), address1: z.string(), address2: z.string(), city: z.string(), country_code: z.string(), region: z.string(), zip: z.string() }), line_items: z.object({product_id: z.string(), variant_id: z.number(), quantity: z.number()}).array() }) }))
+    .input(z.object({ order: z.object({ address_to: z.object({ first_name: z.string(), last_name: z.string(), address1: z.string(), address2: z.string(), city: z.string(), country: z.string(), region: z.string(), zip: z.string() }), line_items: z.object({product_id: z.string(), variant_id: z.number(), quantity: z.number()}).array() }) }))
     .query(async (opts) => {
         const { order }  = opts.input;
         // console.log(order, "order");

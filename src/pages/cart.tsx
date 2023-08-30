@@ -25,7 +25,7 @@ export default function CartPage () {
         address1: '',
         address2: '',
         city: '',
-        country_code: 'US',
+        country: 'US',
         email: '',
         first_name: '',
         last_name: '',
@@ -96,6 +96,7 @@ export default function CartPage () {
             [e.target.name]: e.target.value
         })
         console.log(address_to)
+        console.log(JSON.stringify(address_to).length)
     }
 
     useEffect(() => {
@@ -104,6 +105,7 @@ export default function CartPage () {
             acc += cartItem.qty * makePrice(cartItem.variant.price)
         })
         setTotal(acc)
+        setCalcShip(false)
     }, [cart])
 
     const showImg = (item:cartItem) => {
@@ -176,18 +178,21 @@ export default function CartPage () {
                         <label htmlFor="zip">Zip:</label><br />
                         <input name="zip" type='text' className="" placeholder='zip' onChange={(e) => handleInputChange(e)}/>
                         <label htmlFor="country">Country:</label><br />
-                        <select name='country_code' id="country" onChange={(e) => handleInputChange(e)}>
+                        <select name='country' id="country" onChange={(e) => handleInputChange(e)}>
                             <option value="US">United States</option>
                             <option value="CA">Canada</option>
                         </select>
                         <button onClick={(e) => calculateShipping(e)} className="border border-white p-3 w-44 mx-auto mt-3 rounded-full bg-violet-500 hover:bg-blue-800 cursor-pointer ">Calculate Shipping</button>
                     </form>
-                    <p>Shipping: ${shippingCost}</p>
-                    <p>Subtotal: ${total} </p>
+                    <p>Shipping: ${makePrice(shippingCost)}</p>
+                    <p>Subtotal: ${total + makePrice(shippingCost)} </p>
                     <p>Total: (calculated at checkout)</p>
                     {calcShip && <form action="/api/checkout_sessions" method="POST">
                         {hasHydrated && 
-                            <input type='hidden' name={`cart`} value={JSON.stringify(cart)} /> 
+                            <>
+                                <input type='hidden' name={`cart`} value={JSON.stringify(cart)} /> 
+                                <input type="hidden" name="address_to" value={JSON.stringify(address_to)} />
+                            </>
                         }
                         <section className="flex justify-center">
                             <button className="border border-white p-3 w-44 mt-3 rounded-full bg-violet-500 hover:bg-blue-800 cursor-pointer " type="submit" role="link">
