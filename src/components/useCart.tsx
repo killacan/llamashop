@@ -11,6 +11,7 @@ export interface cartItem {
         is_default:boolean,
         options:Array<number>,
         title: string,
+        price:number,
     },
     qty: number,
 }

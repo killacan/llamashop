@@ -5,6 +5,7 @@ import fetch from "node-fetch";
 import dotenv from "dotenv";
 import { type Product } from "~/components/productInterface";
 import { z } from "zod";
+import type { ReadyLineItems } from "~/pages/api/webhooks";
 
 dotenv.config();
 
@@ -90,6 +91,131 @@ async function makePrintifySingleItemRequest(path: string, method = "GET", body?
   return data;
 }
 
+interface ShippingCostRequestBody {
+  address_to: {
+    first_name: string,
+    last_name: string,
+    address1: string,
+    address2: string,
+    city: string,
+    country: string,
+    region: string,
+    zip: string
+  },
+  line_items: {
+    product_id: string,
+    variant_id: number,
+    quantity: number
+  }[]
+}
+
+async function makePrintifyShippingCostRequest(path: string, method = "POST", body?: ShippingCostRequestBody) {
+  const apiUrl = "https://api.printify.com/v1";
+  const url = `${apiUrl}/${path}`;
+  const headers = {
+    "Content-Type": "application/json;charset=utf-8",
+    Authorization: `Bearer ${apiKey}`,
+  };
+
+  interface Options {
+    method: string;
+    headers: {
+        "Content-Type": string;
+        Authorization: string;
+    };
+    body?: string;
+  }
+
+  const options: Options = {
+    method,
+    headers,
+  };
+
+  if (body) {
+    // options.body = JSON.stringify(body);
+    options.body = JSON.stringify({
+      address_to: body.address_to,
+      line_items: body.line_items
+      });
+    console.log(body, "This is the body");
+    console.log(options.body, "This is the options body")
+  }
+
+
+  interface ShippingResponse {
+    standard: number,
+    express: number,
+    priority: number,
+    printify_express: number,
+    error?: string
+  }
+  console.log("made it here", options, "Also a url", url)
+  const response = await fetch(url, options);
+  const data: ShippingResponse = (await response.json()) as ShippingResponse;
+
+  if (!response.ok && data.error) {
+    throw new Error(`Request to Printify API failed: ${data.error}`);
+  }
+
+  return data;
+}
+
+interface OrderBody {
+  label: string,
+  line_items: ReadyLineItems[],
+  shipping_method: number,
+  send_shipping_notification: boolean,
+  address_to: object,
+}
+
+export async function makePrintifyOrderRequest (path: string, method = "POST", body?: OrderBody ) {
+  const apiUrl = "https://api.printify.com/v1";
+  const url = `${apiUrl}/${path}`;
+  const headers = {
+    "Content-Type": "application/json;charset=utf-8",
+    Authorization: `Bearer ${apiKey}`,
+  };
+
+  interface Options {
+    method: string;
+    headers: {
+        "Content-Type": string;
+        Authorization: string;
+    };
+    body?: string;
+  }
+
+  const options: Options = {
+    method,
+    headers,
+  };
+
+  if (body) {
+    // options.body = JSON.stringify(body);
+    options.body = JSON.stringify(body);
+    console.log(body, "This is the body");
+    console.log(options.body, "This is the options body")
+  }
+
+
+  interface ShippingResponse {
+    standard: number,
+    express: number,
+    priority: number,
+    printify_express: number,
+    error?: string
+  }
+  console.log("made it here", options, "Also a url", url)
+  const response = await fetch(url, options);
+  const data: ShippingResponse = (await response.json()) as ShippingResponse;
+
+  if (!response.ok && data.error) {
+    throw new Error(`Request to Printify API failed: ${data.error}`);
+  }
+
+  return data;
+}
+
 export const shopRouter = createTRPCRouter({
   getShops: publicProcedure
     // .input(z.object({}))
@@ -119,6 +245,32 @@ export const shopRouter = createTRPCRouter({
         return product;
     }
   ),
+  getShippingCost: publicProcedure
+    .input(z.object({ order: z.object({ address_to: z.object({ first_name: z.string(), last_name: z.string(), address1: z.string(), address2: z.string(), city: z.string(), country: z.string(), region: z.string(), zip: z.string() }), line_items: z.object({product_id: z.string(), variant_id: z.number(), quantity: z.number()}).array() }) }))
+    .query(async (opts) => {
+        const { order }  = opts.input;
+        // console.log(order, "order");
+        console.log(order.line_items, "line items");
+        const shippingCost = await makePrintifyShippingCostRequest("shops/10296800/orders/shipping.json", "POST", order);
+        // console.log(shippingCost, "shippingCost");
+        return shippingCost;
+
+    }
+  ),
+  submitOrder: publicProcedure
+    .input( z.object({ label: z.string(), line_items: z.object({product_id: z.string(), variant_id: z.number(), quantity: z.number()}).array(), shipping_method: z.number(), send_shipping_notification: z.boolean(), address_to: z.object({ first_name: z.string(), last_name: z.string(), address1: z.string(), address2: z.string(), city: z.string(), country: z.string(), region: z.string(), zip: z.string() }) }))
+    .query(async (opts) => {
+        const { label, line_items, shipping_method, send_shipping_notification, address_to } = opts.input;
+        const order = await makePrintifyRequest("shops/10296800/orders.json", "POST", {
+          label,
+          line_items,
+          shipping_method,
+          send_shipping_notification,
+          address_to
+        });
+        // console.log(order, "order");
+        return order;
+    })
 });
 
 // Define your TRPC API handler

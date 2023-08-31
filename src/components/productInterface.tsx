@@ -19,6 +19,7 @@ export interface Product {
             is_available:boolean,
             is_default:boolean,
             options:Array<number>
+            price:number,
         }
     ],
     options: Array<{
