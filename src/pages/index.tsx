@@ -4,6 +4,7 @@ import ProductListing from "~/components/productListing";
 import { type Product } from "~/components/productInterface";
 import { useEffect, useState } from "react";
 import { shopItemsState } from "~/components/shopItems";
+import { useCartState } from "~/components/useCart";
 
 export const useHasHydrated = () => {
     const [hasHydrated, setHasHydrated] = useState<boolean>(false);
@@ -23,6 +24,7 @@ export default function Home() {
 
   const hasHydrated = useHasHydrated();
   const { shopItems, setShopItems } = shopItemsState((state) => state);
+  const cartFunctions = useCartState((state) => state);
 
   api.shopRouter.getProducts.useQuery(undefined, {
     enabled: shopItems.length === 0,
@@ -49,6 +51,7 @@ export default function Home() {
     const query = new URLSearchParams(window.location.search);
     if (query.get('success')) {
       console.log('Order placed! You will receive an email confirmation.');
+      cartFunctions.removeAllFromCart();
     }
 
     if (query.get('canceled')) {

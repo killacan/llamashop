@@ -68,22 +68,32 @@ export default function CartPage () {
 
     const shipCostResponse = api.shopRouter.getShippingCost.useQuery({order: {address_to, line_items: line_items}},
         {
-            enabled: pingShipping,
+            enabled: pingShipping && line_items.length > 0,
             onSuccess: (data) => {
                 if (data) {
                     setShippingCost(data.standard)
                     setPingShipping(false)
-                    console.log(data, "this is some data")
+                    // console.log(data, "this is some data")
                 } 
             }
         }
     )
 
-    const calculateShipping = (e : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        e.preventDefault()
-        setCalcShip(true)
+    const calculateShipping = (e ?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        if (e)
+            e.preventDefault()
+        // if (shippingCost > 0) {
+            setCalcShip(true)
+        // }
         setPingShipping(true)        
-        console.log(shipCostResponse)
+        // console.log(shipCostResponse)
+        // console.log(cart.length, "cart length")
+        if (cart.length === 0) {
+            setShippingCost(0)
+        }
+        // console.log(shippingCost, "shipping cost")
+        
+
 
     }
 
@@ -104,8 +114,17 @@ export default function CartPage () {
             acc += cartItem.qty * makePrice(cartItem.variant.price)
         })
         setTotal(acc)
-        setCalcShip(false)
+        // setCalcShip(false)
+        calculateShipping()
     }, [cart])
+
+    useEffect(() => {
+        calculateShipping()
+    }, [address_to])
+
+    useEffect(() => {
+        calculateShipping()
+    }, [])
 
 
 
@@ -160,8 +179,8 @@ export default function CartPage () {
 
                     {/* <button className="border border-white p-3 w-44 mx-auto mt-3 rounded-full bg-violet-500 hover:bg-blue-800 cursor-pointer ">Checkout</button> */}
                     <form className="flex flex-col" >
-                        <h2 className="text-xl"> Shipping </h2>
-                        <div className="grid grid-cols-2">
+                        <h2 className="text-xl"> Shipping Country</h2>
+                        {/* <div className="grid grid-cols-2">
                             <label htmlFor="first_name">First name:</label>
                             <label htmlFor="last_name">Last name:</label>
                             <input name="first_name" type='text' className="" placeholder='first name' onChange={(e) => handleInputChange(e)} />
@@ -178,26 +197,25 @@ export default function CartPage () {
                         <input name="region" type='text' className="" placeholder='state' onChange={(e) => handleInputChange(e)}/>
                         <label htmlFor="zip">Zip:</label><br />
                         <input name="zip" type='text' className="" placeholder='zip' onChange={(e) => handleInputChange(e)}/>
-                        <label htmlFor="country">Country:</label><br />
+                        <label htmlFor="country">Country:</label><br /> */}
                         <select name='country' id="country" onChange={(e) => handleInputChange(e)}>
                             <option value="US">United States</option>
                             <option value="CA">Canada</option>
                             {/* <option value="UK">United Kingdom</option> */}
                         </select>
-                        <p>This is the address used for shipping, please make sure it is correct</p>
-                        <button onClick={(e) => calculateShipping(e)} className="border border-white p-3 w-44 mx-auto mt-3 rounded-full bg-violet-500 hover:bg-blue-800 cursor-pointer ">Calculate Shipping</button>
+                        {!!!calcShip && <button onClick={(e) => calculateShipping(e)} className="border border-white p-3 w-44 mx-auto mt-3 rounded-full bg-violet-500 hover:bg-blue-800 cursor-pointer ">Calculate Shipping</button>}
                     </form>
-                    <p>Shipping: ${makePrice(shippingCost)}</p>
+                    <p>Shipping: ${makeShippingCost(shippingCost)}</p>
                     <p>Subtotal: ${total + makeShippingCost(shippingCost)} </p>
                     <p>Total: (calculated at checkout)</p>
-                    {calcShip && <form action="/api/checkout_sessions" method="POST">
-                        {hasHydrated && 
-                            <>
-                                <input type='hidden' name={`cart`} value={JSON.stringify(cart)} /> 
-                                <input type="hidden" name="address_to" value={JSON.stringify(address_to)} />
-                                <input type='hidden' name="shippingCost" value={makeStripePrice(shippingCost)} />
-                            </>
-                        }
+                    {calcShip && hasHydrated && cart.length > 0 && <form action="/api/checkout_sessions" method="POST">
+                        
+                        <>
+                            <input type='hidden' name={`cart`} value={JSON.stringify(cart)} /> 
+                            <input type="hidden" name="address_to" value={JSON.stringify(address_to)} />
+                            <input type='hidden' name="shippingCost" value={makeStripePrice(shippingCost)} />
+                        </>
+                        
                         <section className="flex justify-center">
                             <button className="border border-white p-3 w-44 mt-3 rounded-full bg-violet-500 hover:bg-blue-800 cursor-pointer " type="submit" role="link">
                                 Checkout
