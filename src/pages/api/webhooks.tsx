@@ -113,6 +113,8 @@ const handler = async (
         country: checkoutSession.shipping_details?.address?.country,
         region: checkoutSession.shipping_details?.address?.state,
         zip: checkoutSession.shipping_details?.address?.postal_code,
+        first_name: checkoutSession.shipping_details?.name?.split(' ')[0],
+        last_name: checkoutSession.shipping_details?.name?.split(' ')[1],
       }
 
 
