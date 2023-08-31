@@ -104,7 +104,6 @@ async function makePrintifyShippingCostRequest(path: string, method = "POST", bo
         "Content-Type": string;
         Authorization: string;
     };
-    line_items?: string;
     body?: string;
   }
 
@@ -140,6 +139,10 @@ async function makePrintifyShippingCostRequest(path: string, method = "POST", bo
   }
 
   return data;
+}
+
+async function makePrintifyOrderRequest (path: string, method = "POST", body?: any ) {
+
 }
 
 export const shopRouter = createTRPCRouter({
@@ -181,6 +184,21 @@ export const shopRouter = createTRPCRouter({
         // console.log(shippingCost, "shippingCost");
         return shippingCost;
 
+    }
+  ),
+  submitOrder: publicProcedure
+    .input( z.object({ label: z.string(), line_items: z.object({product_id: z.string(), variant_id: z.number(), quantity: z.number()}).array(), shipping_method: z.number(), send_shipping_notification: z.boolean(), address_to: z.object({ first_name: z.string(), last_name: z.string(), address1: z.string(), address2: z.string(), city: z.string(), country: z.string(), region: z.string(), zip: z.string() }) }))
+    .query(async (opts) => {
+        const { label, line_items, shipping_method, send_shipping_notification, address_to } = opts.input;
+        const order = await makePrintifyRequest("shops/10296800/orders.json", "POST", {
+          label,
+          line_items,
+          shipping_method,
+          send_shipping_notification,
+          address_to
+        });
+        // console.log(order, "order");
+        return order;
     })
 });
 

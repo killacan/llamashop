@@ -1,11 +1,10 @@
 import { type cartItem, useCartState } from "~/components/useCart"
 import Image from 'next/image'
 import { useEffect, useState } from "react";
-import { makePrice } from "~/components/pricing";
+import { makePrice, makeShippingCost, makeStripePrice } from "~/components/pricing";
 import { TfiTrash } from 'react-icons/tfi';
 import Link from "next/link";
 import { api } from "~/utils/api";
-import { set } from "zod";
 
 const useHasHydrated = () => {
     const [hasHydrated, setHasHydrated] = useState<boolean>(false);
@@ -108,6 +107,8 @@ export default function CartPage () {
         setCalcShip(false)
     }, [cart])
 
+
+
     const showImg = (item:cartItem) => {
         const currentVariantId = item.variant.id 
         const newShowImgArr = item.product.images.filter(img => {
@@ -181,17 +182,20 @@ export default function CartPage () {
                         <select name='country' id="country" onChange={(e) => handleInputChange(e)}>
                             <option value="US">United States</option>
                             <option value="CA">Canada</option>
+                            {/* <option value="UK">United Kingdom</option> */}
                         </select>
+                        <p>This is the address used for shipping, please make sure it is correct</p>
                         <button onClick={(e) => calculateShipping(e)} className="border border-white p-3 w-44 mx-auto mt-3 rounded-full bg-violet-500 hover:bg-blue-800 cursor-pointer ">Calculate Shipping</button>
                     </form>
                     <p>Shipping: ${makePrice(shippingCost)}</p>
-                    <p>Subtotal: ${total + makePrice(shippingCost)} </p>
+                    <p>Subtotal: ${total + makeShippingCost(shippingCost)} </p>
                     <p>Total: (calculated at checkout)</p>
                     {calcShip && <form action="/api/checkout_sessions" method="POST">
                         {hasHydrated && 
                             <>
                                 <input type='hidden' name={`cart`} value={JSON.stringify(cart)} /> 
                                 <input type="hidden" name="address_to" value={JSON.stringify(address_to)} />
+                                <input type='hidden' name="shippingCost" value={makeStripePrice(shippingCost)} />
                             </>
                         }
                         <section className="flex justify-center">
