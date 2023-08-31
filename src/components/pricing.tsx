@@ -11,3 +11,7 @@ export function makeStripePrice (price: number) {
 export function makeShippingCost (price: number) {
     return (price / 100)
 }
+
+export function makeStripeShippingCost (price: number) {
+    return (price / 100) * 100
+}

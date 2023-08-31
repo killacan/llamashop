@@ -27,7 +27,7 @@ export default async function handler(req: any, res: any) {
           currency: "usd",
           product_data: {
             name: item.product.title,
-            description: item.product.description,
+            description: item.variant.title,
             images: [item.product.images[0]?.src],
             metadata: {
               product_id: item.product.id,

@@ -1,7 +1,7 @@
 import { type cartItem, useCartState } from "~/components/useCart"
 import Image from 'next/image'
 import { useEffect, useState } from "react";
-import { makePrice, makeShippingCost, makeStripePrice } from "~/components/pricing";
+import { makePrice, makeShippingCost, makeStripePrice, makeStripeShippingCost } from "~/components/pricing";
 import { TfiTrash } from 'react-icons/tfi';
 import Link from "next/link";
 import { api } from "~/utils/api";
@@ -213,7 +213,7 @@ export default function CartPage () {
                         <>
                             <input type='hidden' name={`cart`} value={JSON.stringify(cart)} /> 
                             <input type="hidden" name="address_to" value={JSON.stringify(address_to)} />
-                            <input type='hidden' name="shippingCost" value={makeShippingCost(shippingCost)} />
+                            <input type='hidden' name="shippingCost" value={makeStripeShippingCost(shippingCost)} />
                         </>
                         
                         <section className="flex justify-center">
