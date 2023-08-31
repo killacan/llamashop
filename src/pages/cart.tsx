@@ -213,7 +213,7 @@ export default function CartPage () {
                         <>
                             <input type='hidden' name={`cart`} value={JSON.stringify(cart)} /> 
                             <input type="hidden" name="address_to" value={JSON.stringify(address_to)} />
-                            <input type='hidden' name="shippingCost" value={makeStripePrice(shippingCost)} />
+                            <input type='hidden' name="shippingCost" value={makeShippingCost(shippingCost)} />
                         </>
                         
                         <section className="flex justify-center">
