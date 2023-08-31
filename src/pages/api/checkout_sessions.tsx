@@ -3,7 +3,7 @@
 import { makeStripePrice } from "~/components/pricing";
 import { cartItem } from "~/components/useCart";
 
-export const stripe = require("stripe")(process.env.STRIPE_SECRET_TEST_KEY, {
+export const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY, {
   apiVersion: "2023-08-16",
 });
 
