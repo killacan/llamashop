@@ -3,6 +3,13 @@
 import Stripe from 'stripe';
 import {NextApiRequest, NextApiResponse} from 'next';
 import { stripe } from './checkout_sessions';
+import { makePrintifyOrderRequest } from '~/server/api/routers/printify';
+
+export interface ReadyLineItems {
+  product_id: string,
+  variant_id: string,
+  quantity: number,
+}
 
 const handler = async (
   req: NextApiRequest,
@@ -50,9 +57,86 @@ const handler = async (
       const checkoutSession = event.data.object as Stripe.Checkout.Session;
       console.log(`🛍️ Checkout session id: ${checkoutSession.id}`);
       const lineItems = await stripe.checkout.sessions.listLineItems(checkoutSession.id, {limit: 100, expand: ['data.price.product']})
-      console.log(lineItems, 'lineItems')
-      console.log(lineItems.data[0].price, 'lineItems.data[0].price')
+      // console.log(lineItems, 'lineItems')
+      // console.log(lineItems.data[0].price, 'lineItems.data[0].price')
+      // console.log(checkoutSession.shipping_details?.address, 'checkoutSession.shipping_details?.address')
+
+      interface LineItem {
+        id: string, 
+        object: string,
+        price: {
+          id: string,
+          object: string,
+          active: boolean,
+          billing_scheme: string,
+          created: number,
+          currency: string,
+          livemode: boolean,
+          lookup_key?: string,
+          metadata: {},
+          nickname?: string,
+          product: {
+            id: string,
+            object: string,
+            active: boolean,
+            attributes: [],
+            created: number,
+            description: string,
+            images: [],
+            livemode: boolean,
+            metadata: {
+              product_id: string,
+              variant_id: string,
+            },
+            name: string,
+            package_dimensions?: {},
+            shippable?: boolean,
+          },
+          recurring?: {},
+        },
+        quantity: number,
+      }
+
+      interface LineItems {
+        object: string;
+        data: Array<{
+          LineItem: LineItem;
+        }>;
+        has_more: boolean;
+        url: string;
+      }
+
+      const transferred_address = {
+        address1: checkoutSession.shipping_details?.address?.line1,
+        address2: checkoutSession.shipping_details?.address?.line2,
+        city: checkoutSession.shipping_details?.address?.city,
+        country: checkoutSession.shipping_details?.address?.country,
+        region: checkoutSession.shipping_details?.address?.state,
+        zip: checkoutSession.shipping_details?.address?.postal_code,
+      }
+
+
+
+      const formattedLineItems = lineItems.data.map((item: LineItem) => ({
+        product_id: item.price.product.metadata.product_id,
+        variant_id: item.price.product.metadata.variant_id,
+        quantity: item.quantity,
+      }))
+
+      console.log(formattedLineItems, 'formattedLineItems')
+      console.log(transferred_address, 'transferred_address')
       
+      if (checkoutSession.metadata) {
+        const printifyOrder = await makePrintifyOrderRequest("shops/10296800/orders.json", "POST", {
+            label: "From Main Site",
+            line_items: formattedLineItems,
+            shipping_method: 1,
+            send_shipping_notification: false,
+            address_to: transferred_address,
+        });
+        console.log(printifyOrder, 'printifyOrder')
+      }
+
       // console.log(event.data.object, 'event.data.object for checkout session completed')
       
     } else {
@@ -89,5 +173,7 @@ const buffer = (req: NextApiRequest) => {
     req.on('error', reject);
   });
 };
+
+
 
 export default handler;

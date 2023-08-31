@@ -5,6 +5,7 @@ import fetch from "node-fetch";
 import dotenv from "dotenv";
 import { type Product } from "~/components/productInterface";
 import { z } from "zod";
+import type { ReadyLineItems } from "~/pages/api/webhooks";
 
 dotenv.config();
 
@@ -90,7 +91,25 @@ async function makePrintifySingleItemRequest(path: string, method = "GET", body?
   return data;
 }
 
-async function makePrintifyShippingCostRequest(path: string, method = "POST", body?: any) {
+interface ShippingCostRequestBody {
+  address_to: {
+    first_name: string,
+    last_name: string,
+    address1: string,
+    address2: string,
+    city: string,
+    country: string,
+    region: string,
+    zip: string
+  },
+  line_items: {
+    product_id: string,
+    variant_id: number,
+    quantity: number
+  }[]
+}
+
+async function makePrintifyShippingCostRequest(path: string, method = "POST", body?: ShippingCostRequestBody) {
   const apiUrl = "https://api.printify.com/v1";
   const url = `${apiUrl}/${path}`;
   const headers = {
@@ -141,8 +160,60 @@ async function makePrintifyShippingCostRequest(path: string, method = "POST", bo
   return data;
 }
 
-async function makePrintifyOrderRequest (path: string, method = "POST", body?: any ) {
+interface OrderBody {
+  label: string,
+  line_items: ReadyLineItems[],
+  shipping_method: number,
+  send_shipping_notification: boolean,
+  address_to: object,
+}
 
+export async function makePrintifyOrderRequest (path: string, method = "POST", body?: OrderBody ) {
+  const apiUrl = "https://api.printify.com/v1";
+  const url = `${apiUrl}/${path}`;
+  const headers = {
+    "Content-Type": "application/json;charset=utf-8",
+    Authorization: `Bearer ${apiKey}`,
+  };
+
+  interface Options {
+    method: string;
+    headers: {
+        "Content-Type": string;
+        Authorization: string;
+    };
+    body?: string;
+  }
+
+  const options: Options = {
+    method,
+    headers,
+  };
+
+  if (body) {
+    // options.body = JSON.stringify(body);
+    options.body = JSON.stringify(body);
+    console.log(body, "This is the body");
+    console.log(options.body, "This is the options body")
+  }
+
+
+  interface ShippingResponse {
+    standard: number,
+    express: number,
+    priority: number,
+    printify_express: number,
+    error?: string
+  }
+  console.log("made it here", options, "Also a url", url)
+  const response = await fetch(url, options);
+  const data: ShippingResponse = (await response.json()) as ShippingResponse;
+
+  if (!response.ok && data.error) {
+    throw new Error(`Request to Printify API failed: ${data.error}`);
+  }
+
+  return data;
 }
 
 export const shopRouter = createTRPCRouter({
