@@ -51,7 +51,7 @@ const handler = async (
     } else if (event.type === 'charge.succeeded') {
       const charge = event.data.object as Stripe.Charge;
       console.log(`💵 Charge id: ${charge.id}`);
-      console.log(`This is the event data:`, event.data)
+      // console.log(`This is the event data:`, event.data)
     
     } else if (event.type === 'checkout.session.completed') {
       const checkoutSession = event.data.object as Stripe.Checkout.Session;
@@ -125,8 +125,8 @@ const handler = async (
         quantity: item.quantity,
       }))
 
-      console.log(formattedLineItems, 'formattedLineItems')
-      console.log(transferred_address, 'transferred_address')
+      // console.log(formattedLineItems, 'formattedLineItems')
+      // console.log(transferred_address, 'transferred_address')
       
       if (checkoutSession.metadata) {
         const printifyOrder = await makePrintifyOrderRequest("shops/10296800/orders.json", "POST", {
@@ -136,7 +136,7 @@ const handler = async (
             send_shipping_notification: false,
             address_to: transferred_address,
         });
-        console.log(printifyOrder, 'printifyOrder')
+        // console.log(printifyOrder, 'printifyOrder')
       }
 
       // console.log(event.data.object, 'event.data.object for checkout session completed')

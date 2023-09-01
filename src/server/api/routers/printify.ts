@@ -137,8 +137,8 @@ async function makePrintifyShippingCostRequest(path: string, method = "POST", bo
       address_to: body.address_to,
       line_items: body.line_items
       });
-    console.log(body, "This is the body");
-    console.log(options.body, "This is the options body")
+    // console.log(body, "This is the body");
+    // console.log(options.body, "This is the options body")
   }
 
 
@@ -149,7 +149,7 @@ async function makePrintifyShippingCostRequest(path: string, method = "POST", bo
     printify_express: number,
     error?: string
   }
-  console.log("made it here", options, "Also a url", url)
+  // console.log("made it here", options, "Also a url", url)
   const response = await fetch(url, options);
   const data: ShippingResponse = (await response.json()) as ShippingResponse;
 
@@ -193,8 +193,8 @@ export async function makePrintifyOrderRequest (path: string, method = "POST", b
   if (body) {
     // options.body = JSON.stringify(body);
     options.body = JSON.stringify(body);
-    console.log(body, "This is the body");
-    console.log(options.body, "This is the options body")
+    // console.log(body, "This is the body");
+    // console.log(options.body, "This is the options body")
   }
 
 
@@ -205,7 +205,7 @@ export async function makePrintifyOrderRequest (path: string, method = "POST", b
     printify_express: number,
     error?: string
   }
-  console.log("made it here", options, "Also a url", url)
+  // console.log("made it here", options, "Also a url", url)
   const response = await fetch(url, options);
   const data: ShippingResponse = (await response.json()) as ShippingResponse;
 
@@ -250,7 +250,7 @@ export const shopRouter = createTRPCRouter({
     .query(async (opts) => {
         const { order }  = opts.input;
         // console.log(order, "order");
-        console.log(order.line_items, "line items");
+        // console.log(order.line_items, "line items");
         const shippingCost = await makePrintifyShippingCostRequest("shops/10296800/orders/shipping.json", "POST", order);
         // console.log(shippingCost, "shippingCost");
         return shippingCost;

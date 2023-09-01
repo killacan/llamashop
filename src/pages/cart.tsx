@@ -98,14 +98,14 @@ export default function CartPage () {
     }
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
-        console.log(e.target.value)
+        // console.log(e.target.value)
 
         setaddress_to({
             ...address_to,
             [e.target.name]: e.target.value
         })
-        console.log(address_to)
-        console.log(JSON.stringify(address_to).length)
+        // console.log(address_to)
+        // console.log(JSON.stringify(address_to).length)
     }
 
     useEffect(() => {

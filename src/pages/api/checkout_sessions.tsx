@@ -8,7 +8,7 @@ export const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY, {
 });
 
 export default async function handler(req: any, res: any) {
-  console.log("hit the handler");
+  // console.log("hit the handler");
   if (req.method === "POST") {
     const cart = JSON.parse(req.body.cart);
     const address_to = JSON.parse(req.body.address_to);
@@ -104,7 +104,7 @@ export default async function handler(req: any, res: any) {
 
       // session.metadata = session.id
       res.redirect(303, session.url);
-      console.log(session, "session");
+      // console.log(session, "session");
     } catch (err: any) {
       res.status(err.statusCode || 500).json(err.message);
     }
