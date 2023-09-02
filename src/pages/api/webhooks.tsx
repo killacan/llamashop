@@ -117,8 +117,6 @@ const handler = async (
         last_name: checkoutSession.shipping_details?.name?.split(' ')[1],
       }
 
-
-
       const formattedLineItems = lineItems.data.map((item: LineItem) => ({
         product_id: item.price.product.metadata.product_id,
         variant_id: item.price.product.metadata.variant_id,
