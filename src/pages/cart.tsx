@@ -82,30 +82,19 @@ export default function CartPage () {
     const calculateShipping = (e ?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         if (e)
             e.preventDefault()
-        // if (shippingCost > 0) {
             setCalcShip(true)
-        // }
         setPingShipping(true)        
-        // console.log(shipCostResponse)
-        // console.log(cart.length, "cart length")
         if (cart.length === 0) {
             setShippingCost(0)
-        }
-        // console.log(shippingCost, "shipping cost")
-        
-
-
+        }       
     }
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
-        // console.log(e.target.value)
 
         setaddress_to({
             ...address_to,
             [e.target.name]: e.target.value
         })
-        // console.log(address_to)
-        // console.log(JSON.stringify(address_to).length)
     }
 
     useEffect(() => {
@@ -175,11 +164,9 @@ export default function CartPage () {
             <div className="h-full lg:m-0 m-auto">
                 <div className="flex flex-col border border-gray-500 p-10 m-5 sticky top-20 w-96">
                     <h2 className="text-2xl"> Summary </h2>
-
-
-                    {/* <button className="border border-white p-3 w-44 mx-auto mt-3 rounded-full bg-violet-500 hover:bg-blue-800 cursor-pointer ">Checkout</button> */}
                     <form className="flex flex-col" >
                         <h2 className="text-xl"> Shipping Country</h2>
+                        {/* This is here just in case I need to add in a Address form later on. */}
                         {/* <div className="grid grid-cols-2">
                             <label htmlFor="first_name">First name:</label>
                             <label htmlFor="last_name">Last name:</label>
@@ -201,6 +188,7 @@ export default function CartPage () {
                         <select name='country' id="country" onChange={(e) => handleInputChange(e)}>
                             <option value="US">United States</option>
                             <option value="CA">Canada</option>
+                            {/* cant ship outside US and CA at the moment. Going to add UK shipping when I can */}
                             {/* <option value="UK">United Kingdom</option> */}
                         </select>
                         {!!!calcShip && <button onClick={(e) => calculateShipping(e)} className="border border-white p-3 w-44 mx-auto mt-3 rounded-full bg-violet-500 hover:bg-blue-800 cursor-pointer ">Calculate Shipping</button>}

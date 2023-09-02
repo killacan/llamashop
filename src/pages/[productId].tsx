@@ -108,7 +108,6 @@ export default function ProductPage() {
   
   const handleOptionChange = (rootIndex:number, selectedValue:number) => {
     // Implement your logic to update the selected option for the specific index
-    // console.log(`Option ${rootIndex} selected: ${selectedValue}`);
     setSelectedOptions((prev) => {
       const newOptions = [...prev];
       newOptions[rootIndex] = selectedValue;
@@ -183,10 +182,8 @@ export default function ProductPage() {
       }
 
     }
-    // console.log('add to cart', productQueryData)
   }
 
-  // let varPrice = 0;
   useEffect(() => {
     // find the variant that matches the selected options
     // filter the images to only show the ones that match the variant.id of the selected variant
@@ -214,7 +211,6 @@ export default function ProductPage() {
 
   if (productQueryData) {
 
-    // console.log(productQueryData, 'productQueryData')
     return (
       <div className="">
         <div className="flex lg:flex-row flex-col justify-center sm:p-10">

@@ -15,9 +15,6 @@ const handler = async (
   req: NextApiRequest,
   res: NextApiResponse
 ): Promise<void> => {
-//   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-//     apiVersion: '2023-08-16',
-//   });
 
   const webhookSecret: string = process.env.STRIPE_WEBHOOK_SECRET as string;
 

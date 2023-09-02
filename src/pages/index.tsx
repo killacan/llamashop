@@ -48,6 +48,7 @@ export default function Home() {
 
   useEffect(() => {
     // Check to see if this is a redirect back from Checkout
+    // if checkout was a success it will clear the cart.
     const query = new URLSearchParams(window.location.search);
     if (query.get('success')) {
       console.log('Order placed! You will receive an email confirmation.');

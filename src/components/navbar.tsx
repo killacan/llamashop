@@ -42,8 +42,6 @@ export default function Navbar () {
                     {hasHydrated && cart.length > 0 && <div className="absolute top-0 right-0 bg-red-500 rounded-full text-white text-xs p-1">{acc}</div>}
                 </Link>
             </div>
-            {/* <div className="block lg:hidden">
-            </div> */}
         </nav>
 
     )
