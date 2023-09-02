@@ -257,20 +257,21 @@ export const shopRouter = createTRPCRouter({
 
     }
   ),
-  submitOrder: publicProcedure
-    .input( z.object({ label: z.string(), line_items: z.object({product_id: z.string(), variant_id: z.number(), quantity: z.number()}).array(), shipping_method: z.number(), send_shipping_notification: z.boolean(), address_to: z.object({ first_name: z.string(), last_name: z.string(), address1: z.string(), address2: z.string(), city: z.string(), country: z.string(), region: z.string(), zip: z.string() }) }))
-    .query(async (opts) => {
-        const { label, line_items, shipping_method, send_shipping_notification, address_to } = opts.input;
-        const order = await makePrintifyRequest("shops/10296800/orders.json", "POST", {
-          label,
-          line_items,
-          shipping_method,
-          send_shipping_notification,
-          address_to
-        });
-        // console.log(order, "order");
-        return order;
-    })
+  // not needed yet, since orders are being processed on the server dont need route or hook for this. 
+  // submitOrder: publicProcedure
+  //   .input( z.object({ label: z.string(), line_items: z.object({product_id: z.string(), variant_id: z.number(), quantity: z.number()}).array(), shipping_method: z.number(), send_shipping_notification: z.boolean(), address_to: z.object({ first_name: z.string(), last_name: z.string(), address1: z.string(), address2: z.string(), city: z.string(), country: z.string(), region: z.string(), zip: z.string() }) }))
+  //   .query(async (opts) => {
+  //       const { label, line_items, shipping_method, send_shipping_notification, address_to } = opts.input;
+  //       const order = await makePrintifyRequest("shops/10296800/orders.json", "POST", {
+  //         label,
+  //         line_items,
+  //         shipping_method,
+  //         send_shipping_notification,
+  //         address_to
+  //       });
+  //       // console.log(order, "order");
+  //       return order;
+  //   })
 });
 
 // Define your TRPC API handler
