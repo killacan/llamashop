@@ -111,7 +111,6 @@ export default function ProductPage() {
     setSelectedOptions((prev) => {
       const newOptions = [...prev];
       newOptions[rootIndex] = selectedValue;
-      // console.log(newOptions, 'newOptions')
       return newOptions;
     }
     );
