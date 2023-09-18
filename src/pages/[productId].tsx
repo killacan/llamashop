@@ -194,7 +194,6 @@ export default function ProductPage() {
       }
       );
       if (variant) {
-        // console.log(variant, 'variant')
         const variantId = variant.id;
         const newImgArr = productQueryData.images.filter(img => img.variant_ids.includes(variantId))
         if (newImgArr.length > 0) {
