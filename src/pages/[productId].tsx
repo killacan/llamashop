@@ -114,7 +114,6 @@ export default function ProductPage() {
       return newOptions;
     }
     );
-    // console.log(selectedOptions, 'selectedOptions')
   };
 
   const handleShowImage = (e: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
