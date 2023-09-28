@@ -51,12 +51,12 @@ export default function Home() {
     // if checkout was a success it will clear the cart.
     const query = new URLSearchParams(window.location.search);
     if (query.get('success')) {
-      console.log('Order placed! You will receive an email confirmation.');
+      // console.log('Order placed! You will receive an email confirmation.');
       cartFunctions.removeAllFromCart();
     }
 
     if (query.get('canceled')) {
-      console.log('Order canceled -- continue to shop around and checkout when you’re ready.');
+      // console.log('Order canceled -- continue to shop around and checkout when you’re ready.');
     }
   }, []);
 
