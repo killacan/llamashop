@@ -171,7 +171,7 @@ export default function ProductPage() {
         }, 500)
 
       } else {
-        console.log('item not available')
+        // console.log('item not available')
         setIsAvailable(false);
         setTimeout(() => {
           setIsAvailable(true);
