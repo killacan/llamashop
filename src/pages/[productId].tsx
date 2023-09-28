@@ -173,6 +173,7 @@ export default function ProductPage() {
       } else {
         // console.log('item not available')
         setIsAvailable(false);
+        // want to have this here so that people dont accidentally add multiple items to cart
         setTimeout(() => {
           setIsAvailable(true);
           setIsAddingToCart(false);
