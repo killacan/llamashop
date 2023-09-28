@@ -140,7 +140,7 @@ export default function ProductPage() {
       });
 
       if (typeof cartItemVariant === 'undefined') {
-        console.log('no variant selected, error adding to cart');
+        // console.log('no variant selected, error adding to cart');
         setIsAvailable(false);
         setTimeout(() => {
           setIsAddingToCart(false);
