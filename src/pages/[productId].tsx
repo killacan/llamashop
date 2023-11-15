@@ -111,11 +111,9 @@ export default function ProductPage() {
     setSelectedOptions((prev) => {
       const newOptions = [...prev];
       newOptions[rootIndex] = selectedValue;
-      // console.log(newOptions, 'newOptions')
       return newOptions;
     }
     );
-    // console.log(selectedOptions, 'selectedOptions')
   };
 
   const handleShowImage = (e: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
@@ -142,7 +140,7 @@ export default function ProductPage() {
       });
 
       if (typeof cartItemVariant === 'undefined') {
-        console.log('no variant selected, error adding to cart');
+        // console.log('no variant selected, error adding to cart');
         setIsAvailable(false);
         setTimeout(() => {
           setIsAddingToCart(false);
@@ -173,8 +171,9 @@ export default function ProductPage() {
         }, 500)
 
       } else {
-        console.log('item not available')
+        // console.log('item not available')
         setIsAvailable(false);
+        // want to have this here so that people dont accidentally add multiple items to cart
         setTimeout(() => {
           setIsAvailable(true);
           setIsAddingToCart(false);
@@ -196,15 +195,12 @@ export default function ProductPage() {
       }
       );
       if (variant) {
-        // console.log(variant, 'variant')
         const variantId = variant.id;
         const newImgArr = productQueryData.images.filter(img => img.variant_ids.includes(variantId))
         if (newImgArr.length > 0) {
           setImgArr(newImgArr);
         }
         setVarPrice(makePrice(variant.price));
-        // console.log(varPrice, 'varPrice')
-        // console.log(newImgArr, 'imgArr')
       }
     }
   }, [selectedOptions, productQueryData])

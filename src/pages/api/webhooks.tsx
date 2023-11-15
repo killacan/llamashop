@@ -28,31 +28,31 @@ const handler = async (
       event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
     } catch (err: any) {
       // On error, log and return the error message
-      console.log(`❌ Error message: ${err.message}`);
+      // console.log(`❌ Error message: ${err.message}`);
       res.status(400).send(`Webhook Error: ${err.message}`);
       return;
     }
 
     // Successfully constructed event
-    console.log('✅ Success:', event.id);
+    // console.log('✅ Success:', event.id);
 
     // Cast event data to Stripe object
     if (event.type === 'payment_intent.succeeded') {
       const stripeObject: Stripe.PaymentIntent = event.data
         .object as Stripe.PaymentIntent;
-      console.log(`💰 PaymentIntent status: ${stripeObject.status}`);
+      // console.log(`💰 PaymentIntent status: ${stripeObject.status}`);
       // console.log(stripeObject)
       // console.log(stripe.checkout.listLineItems(stripeObject), 'listLineItems')
       // const lineItems = await stripe.checkout.sessions.listLineItems(stripeObject.latest_charge, {limit: 100})
       // console.log(stripeObject.metadata, 'metadata')
     } else if (event.type === 'charge.succeeded') {
       const charge = event.data.object as Stripe.Charge;
-      console.log(`💵 Charge id: ${charge.id}`);
+      // console.log(`💵 Charge id: ${charge.id}`);
       // console.log(`This is the event data:`, event.data)
     
     } else if (event.type === 'checkout.session.completed') {
       const checkoutSession = event.data.object as Stripe.Checkout.Session;
-      console.log(`🛍️ Checkout session id: ${checkoutSession.id}`);
+      // console.log(`🛍️ Checkout session id: ${checkoutSession.id}`);
       const lineItems = await stripe.checkout.sessions.listLineItems(checkoutSession.id, {limit: 100, expand: ['data.price.product']})
       // console.log(lineItems, 'lineItems')
       // console.log(lineItems.data[0].price, 'lineItems.data[0].price')
