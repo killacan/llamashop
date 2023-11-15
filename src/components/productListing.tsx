@@ -2,6 +2,7 @@ import Link from "next/link"
 import { type Product } from "./productInterface"
 import Image from "next/image"
 import { makePrice } from "./pricing"
+import OutOfStock from "../../public/out-of-stock-WhiteBG.jpg"
 
 interface ProductListingProps {
     product:Product,
@@ -14,6 +15,7 @@ export default function ProductListing({product}: ProductListingProps ) {
         <Link href={`/${product.id}`} >
             <div className="border border-white rounded-lg overflow-hidden duration-300 hover:scale-110">
                 {product.images[0]?.src && <Image src={product.images[0].src} width={300} height={300} alt="image of the product" />}
+                {!product.images[0]?.src && <Image src={OutOfStock} width={300} height={300} alt="image of the product" />}
                 <p> {product.title}</p>
                 <p> ${makePrice(product.variants[0].price)}</p>
             </div>
