@@ -60,7 +60,7 @@ export default function Home() {
     }
   }, []);
 
-  console.log('shopItems', shopItems)
+  // console.log('shopItems', shopItems)
 
   return (
     <>
