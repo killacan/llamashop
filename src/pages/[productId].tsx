@@ -49,7 +49,7 @@ export default function ProductPage() {
   }
 
   let currentImg = productQueryData?.images[0] as { src: string, position: string };
-  console.log('currentImg', currentImg)
+  // console.log('currentImg', currentImg)
   if (imgArr[showImage]) {
     currentImg = imgArr[showImage] as { src: string, position: string };
   } else {
@@ -232,6 +232,13 @@ export default function ProductPage() {
               />}
 
               {currentImg === undefined && <Image
+                className="h-96 w-96 sticky top-20"
+                src={outOfStock}
+                width={1000}
+                height={1000}
+                alt="out of stock product img"
+              />}
+              {currentImg === null && <Image
                 className="h-96 w-96 sticky top-20"
                 src={outOfStock}
                 width={1000}
