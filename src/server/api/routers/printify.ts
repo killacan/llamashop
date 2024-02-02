@@ -50,6 +50,8 @@ async function makePrintifyRequest(path: string, method = "GET", body?: unknown)
 
   }
 
+  // console.log("made it here", options, "Also a url", url)
+
   const response = await fetch(url, options);
   const data: DataResponse = (await response.json()) as DataResponse;
 
