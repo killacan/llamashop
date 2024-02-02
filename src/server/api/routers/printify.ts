@@ -50,12 +50,12 @@ async function makePrintifyRequest(path: string, method = "GET", body?: unknown)
 
   }
 
-  console.log("made it here", options, "Also a url", url)
+  // console.log("made it here", options, "Also a url", url)
 
   const response = await fetch(url, options);
   const data: DataResponse = (await response.json()) as DataResponse;
 
-  console.log(data, "data")
+  // console.log(data, "data")
 
   if (!response.ok && data.error) {
     throw new Error(`Request to Printify API failed: ${data.error}`);
@@ -230,7 +230,7 @@ export const shopRouter = createTRPCRouter({
   getProducts: publicProcedure
     .query(async () => {
         const products = await makePrintifyRequest("/shops/10296800/products.json");
-        console.log(products, "products");
+        // console.log(products, "products");
         return products;
     }
   ),
