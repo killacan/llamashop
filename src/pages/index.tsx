@@ -60,6 +60,8 @@ export default function Home() {
     }
   }, []);
 
+  console.log('shopItems', shopItems)
+
   return (
     <>
       <Head>

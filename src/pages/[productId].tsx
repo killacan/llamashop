@@ -7,10 +7,11 @@ import { shopItemsState } from "~/components/shopItems";
 import { type Product } from '~/components/productInterface';
 import { makePrice } from '~/components/pricing';
 import { useHasHydrated } from '.';
+import outOfStock from '../../public/out-of-stock-WhiteBG.jpg';
 
 interface img {
   src: string,
-  position: string,
+  // position: string,
 }
 
 export default function ProductPage() {
@@ -48,11 +49,12 @@ export default function ProductPage() {
   }
 
   let currentImg = productQueryData?.images[0] as { src: string, position: string };
-
+  console.log('currentImg', currentImg)
   if (imgArr[showImage]) {
     currentImg = imgArr[showImage] as { src: string, position: string };
   } else {
     currentImg = productQueryData?.images[0] as { src: string, position: string };
+
   }
 
   const productOptions = productQueryData?.options;
@@ -217,18 +219,25 @@ export default function ProductPage() {
                 .map((image, index) => (
                   <Image className='cursor-pointer w-full' onClick={(e) => handleShowImage (e)} src={image.src} width={50} height={50} alt="product image" key={index} data-index={index} />
                 ))}
-                {imgArr.length === 0 && productQueryData.images
-                .map((image, index) => (
-                  <Image className='cursor-pointer w-full' onClick={(e) => handleShowImage (e)} src={image.src} width={50} height={50} alt="product image" key={index} data-index={index} />
-                ))}
+                {imgArr.length === 0 && 
+                  <Image className='cursor-pointer w-full' onClick={(e) => handleShowImage (e)} src={outOfStock} width={50} height={50} alt="product image" key={1} data-index={1} />
+                }
               </div>
-              <Image
+              {currentImg && currentImg !== undefined && <Image
                 className="h-96 w-96 sticky top-20"
                 src={currentImg.src}
                 width={1000}
                 height={1000}
                 alt="product image"
-              />
+              />}
+
+              {currentImg === undefined && <Image
+                className="h-96 w-96 sticky top-20"
+                src={outOfStock}
+                width={1000}
+                height={1000}
+                alt="out of stock product img"
+              />}
             </div>
           )}
           <form className="flex flex-col">
